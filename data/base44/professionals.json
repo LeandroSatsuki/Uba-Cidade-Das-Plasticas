@@ -1,0 +1,44 @@
+[
+  {
+    "base44_id": "69ed780d1e469cc0c04b388b",
+    "nome": "Dra. Camila Souza",
+    "foto_perfil_url": "https://images.unsplash.com/photo-1594824476967-48c8b964ac31?w=400&h=400&fit=crop&crop=face",
+    "especialidades": "Blefaroplastia, Lifting Facial, Preenchimento",
+    "descricao_curta": "Cirurgiã plástica com atuação focada em rejuvenescimento facial. Resultados sutis e elegantes.",
+    "formacao": "Medicina - UFV | Residência em Cirurgia Plástica - UFMG | Especialização em Cirurgia Estética Facial",
+    "crm": "CRM/MG 11223",
+    "registro_sbcp": "SBCP 5566",
+    "telefone": "(32) 3531-9012",
+    "whatsapp": "32999012345",
+    "created_date": "2026-04-26T02:27:25.264000",
+    "updated_date": "2026-04-26T02:27:25.264000"
+  },
+  {
+    "base44_id": "69ed780d1e469cc0c04b388a",
+    "nome": "Dr. Ricardo Mendes",
+    "foto_perfil_url": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop&crop=face",
+    "especialidades": "Mamoplastia, Lipoaspiração, Abdominoplastia",
+    "descricao_curta": "Referência em cirurgia corporal em Ubá. Técnicas avançadas com foco em segurança e resultado natural.",
+    "formacao": "Medicina - UFMG | Residência em Cirurgia Plástica - Santa Casa de SP | Fellow em Body Contouring - EUA",
+    "crm": "CRM/MG 67890",
+    "registro_sbcp": "SBCP 4321",
+    "telefone": "(32) 3531-5678",
+    "whatsapp": "32995678901",
+    "created_date": "2026-04-26T02:27:25.264000",
+    "updated_date": "2026-04-26T02:27:25.264000"
+  },
+  {
+    "base44_id": "69ed780d1e469cc0c04b3889",
+    "nome": "Dra. Thais Souza",
+    "foto_perfil_url": "https://base44.app/api/apps/69ed774a1dcbd8c2befbcfc9/files/mp/public/69ed774a1dcbd8c2befbcfc9/b31516820_Perfil.png",
+    "especialidades": "Contorno Corporal, Mastopexia em L, Argoplasma, Lipo Ultrassônica",
+    "descricao_curta": "Milhares de vidas esculpidas!\nCIRURGIA GERAL - RQE Nº: 38322\nCIRURGIA PLÁSTICA - RQE Nº: 38323.",
+    "formacao": "Universidade Federal de Juiz de Fora - Campus Juiz de Fora, em 2011.",
+    "crm": "CRM/MG 55066",
+    "registro_sbcp": "SBCP",
+    "telefone": "",
+    "whatsapp": "32 98833-6590",
+    "created_date": "2026-04-26T02:27:25.264000",
+    "updated_date": "2026-05-02T22:25:37.047000"
+  }
+]
