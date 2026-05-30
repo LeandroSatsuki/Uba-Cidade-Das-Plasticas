@@ -51,7 +51,7 @@ export default function HomePage() {
             </Link>
 
             <Link
-              href="/feed"
+              href="/guia"
               className="flex h-12 w-full items-center justify-center rounded-xl border border-border bg-card px-4 text-sm font-bold shadow-sm transition hover:bg-muted"
             >
               Ver guia de conteúdos
@@ -85,7 +85,7 @@ export default function HomePage() {
             <span className="text-xl">⌂</span>
             Início
           </Link>
-          <Link href="/feed" className="flex flex-col items-center justify-center gap-1">
+          <Link href="/guia" className="flex flex-col items-center justify-center gap-1">
             <span className="text-xl">□</span>
             Guia
           </Link>

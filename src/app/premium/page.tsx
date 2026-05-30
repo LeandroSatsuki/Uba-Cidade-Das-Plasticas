@@ -124,7 +124,7 @@ export default function PremiumPage() {
             <span className="text-xl">⌂</span>
             Início
           </Link>
-          <Link href="/feed" className="flex flex-col items-center justify-center gap-1">
+          <Link href="/guia" className="flex flex-col items-center justify-center gap-1">
             <span className="text-xl">□</span>
             Guia
           </Link>
