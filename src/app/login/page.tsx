@@ -1,6 +1,83 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return "Não foi possível concluir o cadastro. Tente novamente.";
+}
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+
+    const trimmedName = fullName.trim();
+    const trimmedEmail = email.trim();
+
+    if (!trimmedName) {
+      setError("Informe seu nome completo.");
+      return;
+    }
+
+    if (!trimmedEmail) {
+      setError("Informe seu e-mail.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("A senha precisa ter no mínimo 6 caracteres.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("As senhas não coincidem.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const supabase = createClient();
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: trimmedEmail,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/feed`,
+          data: {
+            full_name: trimmedName,
+          },
+        },
+      });
+
+      if (signUpError) {
+        setError(getErrorMessage(signUpError));
+        return;
+      }
+
+      router.replace("/feed");
+      router.refresh();
+    } catch (caughtError) {
+      setError(getErrorMessage(caughtError));
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
@@ -42,7 +119,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <label
                 htmlFor="name"
@@ -55,6 +132,8 @@ export default function LoginPage() {
                 name="name"
                 type="text"
                 placeholder="Seu nome"
+                value={fullName}
+                onChange={(event) => setFullName(event.target.value)}
                 className="h-12 w-full rounded-xl border border-input bg-transparent px-4 text-sm shadow-sm outline-none transition focus:border-ring"
               />
             </div>
@@ -71,6 +150,8 @@ export default function LoginPage() {
                 name="email"
                 type="email"
                 placeholder="seu@email.com"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
                 className="h-12 w-full rounded-xl border border-input bg-transparent px-4 text-sm shadow-sm outline-none transition focus:border-ring"
               />
             </div>
@@ -88,6 +169,8 @@ export default function LoginPage() {
                   name="password"
                   type="password"
                   placeholder="Mínimo 6 caracteres"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
                   className="h-12 w-full rounded-xl border border-input bg-transparent px-4 pr-11 text-sm shadow-sm outline-none transition focus:border-ring"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -109,6 +192,8 @@ export default function LoginPage() {
                   name="confirmPassword"
                   type="password"
                   placeholder="Repita a senha"
+                  value={confirmPassword}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
                   className="h-12 w-full rounded-xl border border-input bg-transparent px-4 pr-11 text-sm shadow-sm outline-none transition focus:border-ring"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -117,11 +202,18 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {error ? (
+              <p className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                {error}
+              </p>
+            ) : null}
+
             <button
-              type="button"
-              className="h-12 w-full rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90"
+              type="submit"
+              disabled={loading}
+              className="h-12 w-full rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Criar conta grátis
+              {loading ? "Criando conta..." : "Criar conta grátis"}
             </button>
           </form>
 
