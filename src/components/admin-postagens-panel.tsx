@@ -13,6 +13,7 @@ type AdminPostagensPanelProps = {
 type ContentDraft = {
   id: string;
   professional_id: string;
+  content_type: "feed" | "story";
   imagem_url: string;
   legenda: string;
   is_premium: boolean;
@@ -23,6 +24,7 @@ function getInitialDrafts(contents: Content[]) {
   return contents.map<ContentDraft>((content) => ({
     id: content.id,
     professional_id: content.professional_id ?? "",
+    content_type: content.content_type ?? "feed",
     imagem_url: content.imagem_url ?? "",
     legenda: content.legenda,
     is_premium: content.is_premium,
@@ -36,6 +38,7 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
   const [drafts, setDrafts] = useState<ContentDraft[]>(() => getInitialDrafts(contents));
   const [newPost, setNewPost] = useState({
     professional_id: professionals[0]?.id ?? "",
+    content_type: "feed" as "feed" | "story",
     imagem_url: "",
     legenda: "",
     is_premium: false,
@@ -62,6 +65,7 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
       const viewerId = await getViewerId();
       const { error } = await supabase.from("contents").insert({
         professional_id: newPost.professional_id,
+        content_type: newPost.content_type,
         author_id: viewerId,
         imagem_url: newPost.imagem_url.trim(),
         legenda: newPost.legenda.trim(),
@@ -75,6 +79,7 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
 
       setNewPost({
         professional_id: professionals[0]?.id ?? "",
+        content_type: "feed",
         imagem_url: "",
         legenda: "",
         is_premium: false,
@@ -94,6 +99,7 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
         .from("contents")
         .update({
           professional_id: draft.professional_id || null,
+          content_type: draft.content_type,
           imagem_url: draft.imagem_url.trim(),
           legenda: draft.legenda.trim(),
           is_premium: draft.is_premium,
@@ -163,6 +169,23 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
                   {professional.nome}
                 </option>
               ))}
+            </select>
+          </label>
+
+          <label className="grid gap-2 text-sm">
+            <span className="font-semibold">Tipo</span>
+            <select
+              value={newPost.content_type}
+              onChange={(event) =>
+                setNewPost((current) => ({
+                  ...current,
+                  content_type: event.target.value === "story" ? "story" : "feed",
+                }))
+              }
+              className="h-12 rounded-xl border border-input bg-transparent px-4 outline-none"
+            >
+              <option value="feed">Feed</option>
+              <option value="story">Stories</option>
             </select>
           </label>
 
@@ -264,6 +287,30 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
                         {professional.nome}
                       </option>
                     ))}
+                  </select>
+                </label>
+
+                <label className="grid gap-2 text-sm">
+                  <span className="font-semibold">Tipo</span>
+                  <select
+                    value={draft.content_type}
+                    onChange={(event) =>
+                      setDrafts((current) =>
+                        current.map((item) =>
+                          item.id === draft.id
+                            ? {
+                                ...item,
+                                content_type:
+                                  event.target.value === "story" ? "story" : "feed",
+                              }
+                            : item,
+                        ),
+                      )
+                    }
+                    className="h-12 rounded-xl border border-input bg-transparent px-4 outline-none"
+                  >
+                    <option value="feed">Feed</option>
+                    <option value="story">Stories</option>
                   </select>
                 </label>
 

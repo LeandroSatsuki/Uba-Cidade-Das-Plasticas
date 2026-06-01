@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BottomNav } from "@/components/bottom-nav";
 
 const guideSections = [
   {
@@ -133,22 +134,7 @@ export default function GuiaPage() {
         </div>
       </section>
 
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur-xl">
-        <div className="mx-auto grid h-16 max-w-lg grid-cols-3 text-xs text-muted-foreground">
-          <Link href="/" className="flex flex-col items-center justify-center gap-1">
-            <span className="text-xl">⌂</span>
-            Inicio
-          </Link>
-          <Link href="/feed" className="flex flex-col items-center justify-center gap-1 text-foreground">
-            <span className="text-xl">□</span>
-            Feed
-          </Link>
-          <Link href="/perfil" className="flex flex-col items-center justify-center gap-1">
-            <span className="text-xl">♙</span>
-            Perfil
-          </Link>
-        </div>
-      </nav>
+      <BottomNav />
     </main>
   );
 }

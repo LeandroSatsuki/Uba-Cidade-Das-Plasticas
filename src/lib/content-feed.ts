@@ -1,7 +1,8 @@
 import "server-only";
 
+import { base44Contents, base44Professionals } from "@/lib/base44-data";
+import { getCurrentViewerProfile } from "@/lib/current-profile";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { createClient as createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   Content,
   ContentComment,
@@ -12,17 +13,13 @@ import type {
   Profile,
 } from "@/types/content";
 
-type ViewerProfile = {
-  authUserId: string | null;
-  authEmail: string | null;
-  authFullName: string | null;
-  profile: Profile | null;
-};
+type ViewerProfile = Awaited<ReturnType<typeof getCurrentViewerProfile>>;
 
 type FeedGraphData = {
   viewer: ViewerProfile;
   professionals: Professional[];
   contents: Content[];
+  stories: Content[];
   likes: ContentLike[];
   comments: ContentComment[];
   commentAuthors: ContentCommentAuthor[];
@@ -52,6 +49,41 @@ function uniqueStrings(values: Array<string | null | undefined>) {
 
 function mapProfilesById(profiles: ContentCommentAuthor[]) {
   return new Map(profiles.map((profile) => [profile.id, profile]));
+}
+
+function mapFallbackProfessionals(): Professional[] {
+  return base44Professionals.map((professional) => ({
+    id: professional.base44_id,
+    base44_id: professional.base44_id,
+    nome: professional.nome,
+    foto_perfil_url: professional.foto_perfil_url,
+    especialidades: professional.especialidades,
+    descricao_curta: professional.descricao_curta,
+    formacao: professional.formacao,
+    crm: professional.crm,
+    registro_sbcp: professional.registro_sbcp,
+    telefone: professional.telefone,
+    whatsapp: professional.whatsapp,
+    ativo: true,
+    created_at: professional.created_date,
+    updated_at: professional.updated_date,
+  }));
+}
+
+function mapFallbackContents(): Content[] {
+  return base44Contents.map((content) => ({
+    id: content.base44_id,
+    base44_id: content.base44_id,
+    professional_id: content.profissional_id,
+    author_id: null,
+    content_type: "feed",
+    imagem_url: content.imagem_url,
+    legenda: content.legenda,
+    is_premium: false,
+    ativo: true,
+    created_at: content.created_date,
+    updated_at: content.updated_date,
+  }));
 }
 
 function buildPosts(params: {
@@ -102,42 +134,9 @@ function buildPosts(params: {
   });
 }
 
-async function getViewerProfile(): Promise<ViewerProfile> {
-  const serverClient = await createSupabaseServerClient();
-  const adminClient = createAdminClient();
-
-  const {
-    data: { user },
-  } = await serverClient.auth.getUser();
-
-  if (!user) {
-    return { authUserId: null, authEmail: null, authFullName: null, profile: null };
-  }
-
-  const { data: profile } = await adminClient
-    .from("profiles")
-    .select(
-      "id, email, full_name, phone, city, birth_date, avatar_url, plastic_surgery_interests, role, premium_status, premium_since, premium_until, stripe_customer_id, created_at, updated_at",
-    )
-    .eq("id", user.id)
-    .maybeSingle();
-
-  return {
-    authUserId: user.id,
-    authEmail: user.email ?? null,
-    authFullName:
-      typeof user.user_metadata?.full_name === "string"
-        ? user.user_metadata.full_name
-        : typeof user.user_metadata?.name === "string"
-          ? user.user_metadata.name
-          : null,
-    profile: (profile as Profile | null) ?? null,
-  };
-}
-
 async function getFeedGraphData(): Promise<FeedGraphData> {
   const adminClient = createAdminClient();
-  const viewer = await getViewerProfile();
+  const viewer = await getCurrentViewerProfile();
 
   const [{ data: professionals }, { data: contents }, { data: likes }, { data: comments }] =
     await Promise.all([
@@ -164,10 +163,17 @@ async function getFeedGraphData(): Promise<FeedGraphData> {
         .in("id", commentAuthorIds)
     : { data: [] };
 
+  const dbProfessionals = (professionals ?? []) as Professional[];
+  const dbContents = (contents ?? []) as Content[];
+  const useFallback = dbContents.length === 0;
+
   return {
     viewer,
-    professionals: (professionals ?? []) as Professional[],
-    contents: (contents ?? []) as Content[],
+    professionals: useFallback ? mapFallbackProfessionals() : dbProfessionals,
+    contents: useFallback ? mapFallbackContents() : dbContents,
+    stories: useFallback
+      ? []
+      : dbContents.filter((content) => (content.content_type ?? "feed") === "story"),
     likes: (likes ?? []) as ContentLike[],
     comments: (comments ?? []) as ContentComment[],
     commentAuthors: (commentAuthors ?? []) as ContentCommentAuthor[],
@@ -176,14 +182,16 @@ async function getFeedGraphData(): Promise<FeedGraphData> {
 
 export async function loadFeedPageData() {
   const graph = await getFeedGraphData();
+  const feedContents = graph.contents.filter((content) => (content.content_type ?? "feed") === "feed");
 
   return {
     viewer: graph.viewer,
     professionals: graph.professionals,
+    stories: graph.stories,
     posts: buildPosts({
       viewerId: graph.viewer.authUserId,
       professionals: graph.professionals,
-      contents: graph.contents,
+      contents: feedContents,
       likes: graph.likes,
       comments: graph.comments,
       commentAuthors: graph.commentAuthors,
@@ -199,7 +207,11 @@ export async function loadProfessionalPageData(base44Id: string): Promise<Profes
   const posts = buildPosts({
     viewerId: graph.viewer.authUserId,
     professionals: graph.professionals,
-    contents: graph.contents.filter((content) => content.professional_id === professional?.id),
+    contents: graph.contents.filter(
+      (content) =>
+        (content.content_type ?? "feed") === "feed" &&
+        content.professional_id === professional?.id,
+    ),
     likes: graph.likes,
     comments: graph.comments,
     commentAuthors: graph.commentAuthors,
@@ -224,7 +236,7 @@ export async function loadAdminPostagensData(): Promise<AdminPostagensData> {
 }
 
 export async function loadProfilePageData(): Promise<ProfilePageData> {
-  const viewer = await getViewerProfile();
+  const viewer = await getCurrentViewerProfile();
 
   if (!viewer.authUserId) {
     return {

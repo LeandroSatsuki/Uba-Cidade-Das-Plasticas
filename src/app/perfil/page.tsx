@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { BottomNav } from "@/components/bottom-nav";
 import { AppShell } from "@/components/app-shell";
 import { ProfilePanel } from "@/components/profile-panel";
 import { loadProfilePageData } from "@/lib/content-feed";
@@ -28,28 +29,22 @@ export default async function PerfilPage() {
       </section>
 
       <section className="mt-8">
+        {profile?.role === "admin" ? (
+          <Link
+            href="/admin"
+            className="inline-flex h-11 items-center justify-center rounded-xl border border-border px-4 text-sm font-semibold transition hover:bg-muted"
+          >
+            Área administrativa
+          </Link>
+        ) : null}
+
         <ProfilePanel
           profile={profile}
           authEmail={viewer.authEmail}
         />
       </section>
 
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur-xl">
-        <div className="mx-auto grid h-16 max-w-lg grid-cols-3 text-xs text-muted-foreground">
-          <Link href="/" className="flex flex-col items-center justify-center gap-1">
-            <span className="text-xl">⌂</span>
-            Início
-          </Link>
-          <Link href="/feed" className="flex flex-col items-center justify-center gap-1">
-            <span className="text-xl">□</span>
-            Feed
-          </Link>
-          <Link href="/perfil" className="flex flex-col items-center justify-center gap-1 text-foreground">
-            <span className="text-xl">♙</span>
-            Perfil
-          </Link>
-        </div>
-      </nav>
+      <BottomNav />
     </AppShell>
   );
 }

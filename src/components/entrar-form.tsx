@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { BottomNav } from "@/components/bottom-nav";
 import { createClient } from "@/lib/supabase/client";
 import { getSafeNextPath } from "@/lib/safe-next";
 
@@ -195,22 +196,7 @@ export function EntrarForm({
         </div>
       </section>
 
-      <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur-xl">
-        <div className="mx-auto grid h-16 max-w-lg grid-cols-3 text-xs text-muted-foreground">
-          <Link href="/" className="flex flex-col items-center justify-center gap-1">
-            <span className="text-xl">⌂</span>
-            Início
-          </Link>
-          <Link href="/feed" className="flex flex-col items-center justify-center gap-1">
-            <span className="text-xl">□</span>
-            Feed
-          </Link>
-          <Link href="/perfil" className="flex flex-col items-center justify-center gap-1 text-foreground">
-            <span className="text-xl">♙</span>
-            Perfil
-          </Link>
-        </div>
-      </nav>
+      <BottomNav />
     </main>
   );
 }

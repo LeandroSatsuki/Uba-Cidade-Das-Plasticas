@@ -38,6 +38,7 @@ export type Content = {
   base44_id: string | null;
   professional_id: string | null;
   author_id: string | null;
+  content_type: "feed" | "story" | null;
   imagem_url: string | null;
   legenda: string;
   is_premium: boolean;

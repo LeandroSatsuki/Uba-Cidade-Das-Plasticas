@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { BottomNav } from "@/components/bottom-nav";
 import { AppShell } from "@/components/app-shell";
 import { AdminPostagensPanel } from "@/components/admin-postagens-panel";
 import { loadAdminPostagensData } from "@/lib/content-feed";
@@ -38,6 +39,8 @@ export default async function AdminPostagensPage() {
           contents={contents}
         />
       </section>
+
+      <BottomNav />
     </AppShell>
   );
 }
