@@ -1,13 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-
-function getSafeNextPath(nextValue: string | null) {
-  if (!nextValue || !nextValue.startsWith("/") || nextValue.startsWith("//")) {
-    return "/feed";
-  }
-
-  return nextValue;
-}
+import { getSafeNextPath } from "@/lib/safe-next";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);

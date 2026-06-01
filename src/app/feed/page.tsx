@@ -1,12 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { FeedPostCard } from "@/components/feed-post-card";
+import { StoriesRail } from "@/components/stories-rail";
 import { loadFeedPageData } from "@/lib/content-feed";
 
 export const dynamic = "force-dynamic";
 
 export default async function FeedPage() {
   const { viewer, professionals, posts } = await loadFeedPageData();
+  if (!viewer.authUserId) {
+    redirect("/entrar?next=/feed");
+  }
+
   const isAdmin = viewer.profile?.role === "admin";
 
   return (
@@ -96,6 +102,10 @@ export default async function FeedPage() {
           </div>
         </div>
 
+        <div className="mb-6">
+          <StoriesRail professionals={professionals} showSelfStory />
+        </div>
+
         <div className="space-y-5">
           {posts.length > 0 ? (
             posts.map((post) => (
@@ -123,9 +133,9 @@ export default async function FeedPage() {
           </Link>
           <Link href="/feed" className="flex flex-col items-center justify-center gap-1 text-foreground">
             <span className="text-xl">□</span>
-            Conteúdos
+            Feed
           </Link>
-          <Link href="/entrar" className="flex flex-col items-center justify-center gap-1">
+          <Link href="/perfil" className="flex flex-col items-center justify-center gap-1">
             <span className="text-xl">♙</span>
             Perfil
           </Link>

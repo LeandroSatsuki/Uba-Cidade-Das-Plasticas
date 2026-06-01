@@ -14,6 +14,8 @@ import type {
 
 type ViewerProfile = {
   authUserId: string | null;
+  authEmail: string | null;
+  authFullName: string | null;
   profile: Profile | null;
 };
 
@@ -35,8 +37,13 @@ type ProfessionalPageData = {
 
 type AdminPostagensData = {
   viewer: ViewerProfile;
-  professionals: Professional[];
+  professionals: Professional[]; 
   contents: Content[];
+};
+
+type ProfilePageData = {
+  viewer: ViewerProfile;
+  profile: Profile | null;
 };
 
 function uniqueStrings(values: Array<string | null | undefined>) {
@@ -104,17 +111,26 @@ async function getViewerProfile(): Promise<ViewerProfile> {
   } = await serverClient.auth.getUser();
 
   if (!user) {
-    return { authUserId: null, profile: null };
+    return { authUserId: null, authEmail: null, authFullName: null, profile: null };
   }
 
   const { data: profile } = await adminClient
     .from("profiles")
-    .select("id, email, full_name, role, premium_status, premium_since, premium_until, stripe_customer_id, created_at, updated_at")
+    .select(
+      "id, email, full_name, phone, city, birth_date, avatar_url, plastic_surgery_interests, role, premium_status, premium_since, premium_until, stripe_customer_id, created_at, updated_at",
+    )
     .eq("id", user.id)
     .maybeSingle();
 
   return {
     authUserId: user.id,
+    authEmail: user.email ?? null,
+    authFullName:
+      typeof user.user_metadata?.full_name === "string"
+        ? user.user_metadata.full_name
+        : typeof user.user_metadata?.name === "string"
+          ? user.user_metadata.name
+          : null,
     profile: (profile as Profile | null) ?? null,
   };
 }
@@ -204,5 +220,56 @@ export async function loadAdminPostagensData(): Promise<AdminPostagensData> {
     viewer: graph.viewer,
     professionals: graph.professionals,
     contents: graph.contents,
+  };
+}
+
+export async function loadProfilePageData(): Promise<ProfilePageData> {
+  const viewer = await getViewerProfile();
+
+  if (!viewer.authUserId) {
+    return {
+      viewer,
+      profile: null,
+    };
+  }
+
+  const adminClient = createAdminClient();
+  const selectColumns =
+    "id, email, full_name, phone, city, birth_date, avatar_url, plastic_surgery_interests, role, premium_status, premium_since, premium_until, stripe_customer_id, created_at, updated_at";
+
+  let { data: profile } = await adminClient
+    .from("profiles")
+    .select(selectColumns)
+    .eq("id", viewer.authUserId)
+    .maybeSingle();
+
+  if (!profile && viewer.authEmail) {
+    const profileUpsertPayload = {
+      id: viewer.authUserId,
+      email: viewer.authEmail,
+      full_name: viewer.authFullName ?? "",
+    };
+
+    const { error: upsertError } = await adminClient.from("profiles").upsert(
+      profileUpsertPayload as never,
+      {
+        onConflict: "id",
+      },
+    );
+
+    if (!upsertError) {
+      const { data: createdProfile } = await adminClient
+        .from("profiles")
+        .select(selectColumns)
+        .eq("id", viewer.authUserId)
+        .maybeSingle();
+
+      profile = createdProfile ?? null;
+    }
+  }
+
+  return {
+    viewer,
+    profile: (profile as Profile | null) ?? null,
   };
 }

@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { getSafeNextPath } from "@/lib/safe-next";
 
 function getErrorMessage(error: unknown) {
   if (error instanceof Error) {
@@ -15,9 +16,13 @@ function getErrorMessage(error: unknown) {
 
 type EntrarFormProps = {
   callbackErrorMessage?: string;
+  nextPath?: string;
 };
 
-export function EntrarForm({ callbackErrorMessage }: EntrarFormProps) {
+export function EntrarForm({
+  callbackErrorMessage,
+  nextPath = "/feed",
+}: EntrarFormProps) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,7 +58,7 @@ export function EntrarForm({ callbackErrorMessage }: EntrarFormProps) {
         return;
       }
 
-      router.replace("/feed");
+      router.replace(getSafeNextPath(nextPath, "/feed"));
       router.refresh();
     } catch (caughtError) {
       setError(getErrorMessage(caughtError));
@@ -196,11 +201,11 @@ export function EntrarForm({ callbackErrorMessage }: EntrarFormProps) {
             <span className="text-xl">⌂</span>
             Início
           </Link>
-          <Link href="/guia" className="flex flex-col items-center justify-center gap-1">
+          <Link href="/feed" className="flex flex-col items-center justify-center gap-1">
             <span className="text-xl">□</span>
-            Guia
+            Feed
           </Link>
-          <Link href="/entrar" className="flex flex-col items-center justify-center gap-1 text-foreground">
+          <Link href="/perfil" className="flex flex-col items-center justify-center gap-1 text-foreground">
             <span className="text-xl">♙</span>
             Perfil
           </Link>

@@ -2,6 +2,11 @@ export type Profile = {
   id: string;
   email: string | null;
   full_name: string | null;
+  phone: string | null;
+  city: string | null;
+  birth_date: string | null;
+  avatar_url: string | null;
+  plastic_surgery_interests: string[];
   role: "admin" | "user";
   premium_status: "none" | "active" | "expired" | "canceled" | "past_due";
   premium_since: string | null;

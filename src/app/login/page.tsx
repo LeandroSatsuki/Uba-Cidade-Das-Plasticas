@@ -253,11 +253,11 @@ export default function LoginPage() {
             <span className="text-xl">⌂</span>
             Início
           </Link>
-          <Link href="/guia" className="flex flex-col items-center justify-center gap-1">
+          <Link href="/feed" className="flex flex-col items-center justify-center gap-1">
             <span className="text-xl">□</span>
-            Guia
+            Feed
           </Link>
-          <Link href="/entrar" className="flex flex-col items-center justify-center gap-1 text-foreground">
+          <Link href="/perfil" className="flex flex-col items-center justify-center gap-1 text-foreground">
             <span className="text-xl">♙</span>
             Perfil
           </Link>
