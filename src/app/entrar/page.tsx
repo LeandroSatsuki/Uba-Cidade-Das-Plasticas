@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function LoginPage() {
+export default function EntrarPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
@@ -35,30 +35,14 @@ export default function LoginPage() {
         <div className="mx-auto w-full max-w-sm">
           <div className="mb-8">
             <h1 className="font-heading text-3xl font-bold leading-tight">
-              Criar sua conta
+              Entrar na sua conta
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Gratuito. Sem cartão de crédito.
+              Acesse seu perfil e conteúdos premium.
             </p>
           </div>
 
           <form className="space-y-6">
-            <div className="space-y-2">
-              <label
-                htmlFor="name"
-                className="text-xs font-bold uppercase tracking-[0.2em]"
-              >
-                Nome completo
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="Seu nome"
-                className="h-12 w-full rounded-xl border border-input bg-transparent px-4 text-sm shadow-sm outline-none transition focus:border-ring"
-              />
-            </div>
-
             <div className="space-y-2">
               <label
                 htmlFor="email"
@@ -87,28 +71,7 @@ export default function LoginPage() {
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Mínimo 6 caracteres"
-                  className="h-12 w-full rounded-xl border border-input bg-transparent px-4 pr-11 text-sm shadow-sm outline-none transition focus:border-ring"
-                />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-                  ◉
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="confirmPassword"
-                className="text-xs font-bold uppercase tracking-[0.2em]"
-              >
-                Confirmar senha
-              </label>
-              <div className="relative">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="Repita a senha"
+                  placeholder="Sua senha"
                   className="h-12 w-full rounded-xl border border-input bg-transparent px-4 pr-11 text-sm shadow-sm outline-none transition focus:border-ring"
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -121,14 +84,23 @@ export default function LoginPage() {
               type="button"
               className="h-12 w-full rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90"
             >
-              Criar conta grátis
+              Entrar
             </button>
           </form>
 
+          <div className="mt-4 text-right">
+            <button
+              type="button"
+              className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+            >
+              Esqueci minha senha
+            </button>
+          </div>
+
           <p className="mt-7 text-center text-sm text-muted-foreground">
-            Já tem uma conta?{" "}
-            <Link href="/entrar" className="font-semibold text-foreground">
-              Entrar
+            Ainda não tem conta?{" "}
+            <Link href="/login" className="font-semibold text-foreground">
+              Criar conta grátis
             </Link>
           </p>
         </div>

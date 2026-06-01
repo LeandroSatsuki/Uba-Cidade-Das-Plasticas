@@ -89,7 +89,7 @@ export default function HomePage() {
             <span className="text-xl">□</span>
             Guia
           </Link>
-          <Link href="/login" className="flex flex-col items-center justify-center gap-1">
+          <Link href="/entrar" className="flex flex-col items-center justify-center gap-1">
             <span className="text-xl">♙</span>
             Perfil
           </Link>
