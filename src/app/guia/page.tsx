@@ -9,35 +9,35 @@ const guideSections = [
     items: [
       "Pesquise a formação do profissional",
       "Verifique CRM e registros informados",
-      "Evite decisões baseadas apenas em preco",
+      "Evite decisões baseadas apenas em preço",
     ],
   },
   {
     title: "Durante a consulta",
     description:
-      "Use a consulta para tirar duvidas, alinhar expectativas e entender riscos.",
+      "Use a consulta para tirar dúvidas, alinhar expectativas e entender riscos.",
     items: [
-      "Pergunte sobre indicacao real do procedimento",
-      "Converse sobre riscos e recuperacao",
-      "Peca explicacoes claras sobre o plano proposto",
+      "Pergunte sobre indicação real do procedimento",
+      "Converse sobre riscos e recuperação",
+      "Peça explicações claras sobre o plano proposto",
     ],
   },
   {
-    title: "Seguranca",
+    title: "Segurança",
     description:
-      "Procedimentos devem ser avaliados com responsabilidade, individualidade e criterio tecnico.",
+      "Procedimentos devem ser avaliados com responsabilidade, individualidade e critério técnico.",
     items: [
-      "Confirme o local onde sera realizado",
-      "Informe historico de saude e medicamentos",
+      "Confirme o local onde será realizado",
+      "Informe histórico de saúde e medicamentos",
       "Desconfie de promessa de resultado garantido",
     ],
   },
   {
-    title: "Pos-operatorio",
+    title: "Pós-operatório",
     description:
-      "A recuperacao faz parte do resultado e precisa seguir orientacao profissional.",
+      "A recuperação faz parte do resultado e precisa seguir orientação profissional.",
     items: [
-      "Siga as recomendacoes recebidas",
+      "Siga as recomendações recebidas",
       "Respeite o tempo de repouso",
       "Procure atendimento se houver sinais inesperados",
     ],
@@ -70,12 +70,12 @@ export default function GuiaPage() {
           </p>
 
           <h1 className="mt-3 font-heading text-4xl font-bold leading-tight">
-            Informacao antes da decisao
+            Informação antes da decisão
           </h1>
 
           <p className="mt-4 text-sm leading-6 text-muted-foreground">
-            Um guia introdutorio para ajudar pacientes a entenderem pontos
-            importantes antes de buscar procedimentos esteticos ou cirurgicos.
+            Um guia introdutório para ajudar pacientes a entenderem pontos
+            importantes antes de buscar procedimentos estéticos ou cirúrgicos.
           </p>
         </div>
 
@@ -84,8 +84,8 @@ export default function GuiaPage() {
             Aviso importante
           </h2>
           <p className="mt-3 text-sm leading-6 text-muted-foreground">
-            Este guia tem carater educativo e nao substitui consulta medica,
-            avaliacao individual ou orientacao profissional.
+            Este guia tem caráter educativo e não substitui consulta médica,
+            avaliação individual ou orientação profissional.
           </p>
         </div>
 
@@ -122,7 +122,7 @@ export default function GuiaPage() {
             href="/feed"
             className="flex h-12 items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white shadow-sm transition hover:opacity-90"
           >
-            Ver conteudos do feed
+            Ver conteúdos do feed
           </Link>
 
           <Link
