@@ -47,6 +47,7 @@ export default function HomePage() {
             <Link
               href="/login"
               className="flex h-12 w-full items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90"
+              style={{ color: "#fff" }}
             >
               Criar conta grátis
             </Link>
