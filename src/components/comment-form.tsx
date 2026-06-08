@@ -95,7 +95,7 @@ export function CommentForm({
         className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm shadow-sm outline-none transition focus:border-ring"
       />
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-muted-foreground">
           Dica: use Ctrl + Enter para enviar depois de escrever.
         </p>
@@ -104,7 +104,7 @@ export function CommentForm({
           type="button"
           onClick={() => void submitComment()}
           disabled={loading || !body.trim()}
-          className="h-11 rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="h-11 w-full rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
           {loading ? "Enviando..." : "Comentar"}
         </button>

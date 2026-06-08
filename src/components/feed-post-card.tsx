@@ -182,12 +182,12 @@ export function FeedPostCard({
 
       {commentsModalMounted ? (
         <div
-          className={`fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-3 backdrop-blur-sm transition-opacity duration-300 ease-out sm:items-center ${commentsModalActive ? "opacity-100" : "opacity-0"}`}
+          className={`fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-2 backdrop-blur-sm transition-opacity duration-300 ease-out sm:items-center sm:p-3 ${commentsModalActive ? "opacity-100" : "opacity-0"}`}
           role="presentation"
           onClick={closeComments}
         >
           <div
-            className={`flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-2xl transition-all duration-300 ease-out ${commentsModalActive ? "translate-y-0 scale-100 opacity-100" : "translate-y-3 scale-95 opacity-0"}`}
+            className={`flex h-[92dvh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl border border-border bg-background shadow-2xl transition-all duration-300 ease-out sm:h-auto sm:max-h-[85vh] sm:rounded-3xl ${commentsModalActive ? "translate-y-0 scale-100 opacity-100" : "translate-y-4 scale-95 opacity-0"}`}
             role="dialog"
             aria-modal="true"
             aria-label="Comentários da postagem"
@@ -211,7 +211,7 @@ export function FeedPostCard({
                 <button
                   type="button"
                   onClick={closeComments}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-lg leading-none transition hover:bg-muted"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-lg leading-none transition hover:bg-muted"
                   aria-label="Fechar comentários"
                 >
                   ×
@@ -270,7 +270,7 @@ export function FeedPostCard({
               />
             </div>
 
-            <div className="border-t border-border bg-background/95 px-4 py-4 backdrop-blur">
+            <div className="border-t border-border bg-background/95 px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-4 backdrop-blur">
               <CommentForm
                 contentId={post.content.id}
                 isAuthenticated={Boolean(viewerAuthUserId)}
