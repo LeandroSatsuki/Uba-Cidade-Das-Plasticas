@@ -95,7 +95,19 @@ export function CommentsList({
           <article key={comment.id} className="rounded-2xl border border-border bg-background p-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-sm font-semibold">{commentAuthorName}</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <p className="text-sm font-semibold">{commentAuthorName}</p>
+                  {comment.author?.role === "admin" ? (
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
+                      Admin
+                    </span>
+                  ) : null}
+                  {viewerId !== null && comment.user_id === viewerId ? (
+                    <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                      Você
+                    </span>
+                  ) : null}
+                </div>
                 <p className="text-xs text-muted-foreground">{formatDate(comment.created_at)}</p>
               </div>
 

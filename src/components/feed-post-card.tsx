@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { LikeButton } from "@/components/like-button";
@@ -36,7 +36,10 @@ export function FeedPostCard({
   currentPath = "/feed",
 }: FeedPostCardProps) {
   const professional = post.professional;
-  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [, setCommentsOpen] = useState(false);
+  const [commentsModalMounted, setCommentsModalMounted] = useState(false);
+  const [commentsModalActive, setCommentsModalActive] = useState(false);
+  const closeTimerRef = useRef<number | null>(null);
   const whatsapp = normalizeWhatsapp(professional?.whatsapp ?? "");
   const whatsappMessage = encodeURIComponent(
     `Olá, vim pelo Cidade das Plásticas e gostaria de saber mais sobre ${professional?.nome ?? "o atendimento"}.`,
@@ -47,6 +50,45 @@ export function FeedPostCard({
 
     return count === 1 ? "1 comentário" : `${count} comentários`;
   }, [post.comments.length]);
+
+  function openComments() {
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+
+    setCommentsOpen(true);
+    setCommentsModalMounted(true);
+    requestAnimationFrame(() => setCommentsModalActive(true));
+  }
+
+  function closeComments() {
+    setCommentsOpen(false);
+    setCommentsModalActive(false);
+
+    closeTimerRef.current = window.setTimeout(() => {
+      setCommentsModalMounted(false);
+      closeTimerRef.current = null;
+    }, 180);
+  }
+
+  useEffect(() => {
+    if (!commentsModalMounted) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        closeComments();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [commentsModalMounted]);
 
   return (
     <>
@@ -106,7 +148,7 @@ export function FeedPostCard({
 
             <button
               type="button"
-              onClick={() => setCommentsOpen(true)}
+              onClick={openComments}
               className="rounded-full border border-border px-4 py-2 text-sm font-medium transition hover:bg-muted"
             >
               💬 Comentar · {commentsCountLabel}
@@ -127,14 +169,14 @@ export function FeedPostCard({
         </div>
       </article>
 
-      {commentsOpen ? (
+      {commentsModalMounted ? (
         <div
-          className="fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-3 backdrop-blur-sm sm:items-center"
+          className={`fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-3 backdrop-blur-sm transition-opacity duration-200 sm:items-center ${commentsModalActive ? "opacity-100" : "opacity-0"}`}
           role="presentation"
-          onClick={() => setCommentsOpen(false)}
+          onClick={closeComments}
         >
           <div
-            className="flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-2xl"
+            className={`flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-2xl transition-all duration-200 ease-out ${commentsModalActive ? "translate-y-0 scale-100 opacity-100" : "translate-y-2 scale-95 opacity-0"}`}
             role="dialog"
             aria-modal="true"
             aria-label="Comentários da postagem"
@@ -150,10 +192,11 @@ export function FeedPostCard({
 
               <button
                 type="button"
-                onClick={() => setCommentsOpen(false)}
-                className="rounded-full border border-border px-3 py-1.5 text-xs font-semibold transition hover:bg-muted"
+                onClick={closeComments}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-lg leading-none transition hover:bg-muted"
+                aria-label="Fechar comentários"
               >
-                Fechar
+                ×
               </button>
             </div>
 
