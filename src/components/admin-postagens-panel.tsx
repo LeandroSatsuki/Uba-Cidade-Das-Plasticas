@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -23,11 +23,26 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
     ativo: true,
   });
   const [loadingId, setLoadingId] = useState<string | "create" | null>(null);
+  const [contentFilter, setContentFilter] = useState<"all" | "feed" | "story" | "active" | "inactive">("all");
   const selectedProfessional =
     professionals.find((professional) => professional.id === newPost.professional_id) ??
     professionals[0] ??
     null;
 
+  const visibleContents = useMemo(() => {
+    const sorted = [...contents].sort(
+      (left, right) =>
+        new Date(right.created_at).getTime() - new Date(left.created_at).getTime(),
+    );
+
+    return sorted.filter((content) => {
+      if (contentFilter === "feed") return content.content_type === "feed";
+      if (contentFilter === "story") return content.content_type === "story";
+      if (contentFilter === "active") return content.ativo;
+      if (contentFilter === "inactive") return !content.ativo;
+      return true;
+    });
+  }, [contentFilter, contents]);
   function duplicatePost(content: Content) {
     setNewPost({
       professional_id: content.professional_id ?? professionals[0]?.id ?? "",
@@ -370,100 +385,143 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
 
 
       <section className="space-y-4">
-        {contents.map((content) => {
-          const professionalName =
-            professionals.find((professional) => professional.id === content.professional_id)?.nome ??
-            "Profissional";
-          const typeLabel = content.content_type === "story" ? "Story" : "Feed";
+        <div className="flex flex-col gap-3 rounded-3xl border border-border bg-card p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="font-heading text-2xl font-semibold">Postagens recentes</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Ordenadas por data, com filtros rápidos para achar o que importa.
+            </p>
+          </div>
 
-          return (
-            <article key={content.id} className="rounded-3xl border border-border bg-card p-5 shadow-sm">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">
-                    {professionalName}
-                  </p>
-                  <h3 className="mt-2 font-heading text-2xl font-semibold">{typeLabel}</h3>
-                </div>
+          <p className="text-sm text-muted-foreground">
+            {visibleContents.length} {visibleContents.length === 1 ? "postagem" : "postagens"}
+          </p>
+        </div>
 
-                <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold">
-                  {content.ativo ? "Ativa" : "Inativa"}
-                </span>
-              </div>
+        <div className="flex flex-wrap gap-2">
+          {([
+            ["all", "Todas"],
+            ["feed", "Feed"],
+            ["story", "Story"],
+            ["active", "Ativas"],
+            ["inactive", "Inativas"],
+          ] as const).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => setContentFilter(value)}
+              className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                contentFilter === value
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-transparent hover:bg-muted"
+              }`}
+              style={contentFilter === value ? { color: "#fff" } : undefined}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
 
-              <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,220px)_minmax(0,1fr)]">
-                <div className="overflow-hidden rounded-2xl border border-border bg-muted">
-                  {content.imagem_url ? (
-                    <div className="relative aspect-[4/5] w-full">
-                      <Image
-                        src={content.imagem_url}
-                        alt={`Conteúdo de ${professionalName}`}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 220px"
-                        className="object-cover object-center"
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex aspect-[4/5] items-center justify-center px-6 text-center text-sm text-muted-foreground">
-                      Conteúdo sem imagem
-                    </div>
-                  )}
-                </div>
+        {visibleContents.length ? (
+          visibleContents.map((content) => {
+            const professionalName =
+              professionals.find((professional) => professional.id === content.professional_id)?.nome ??
+              "Profissional";
+            const typeLabel = content.content_type === "story" ? "Story" : "Feed";
 
-                <div className="space-y-4 min-w-0">
-                  <div className="rounded-2xl border border-border bg-background p-4">
-                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-                      Legenda
+            return (
+              <article key={content.id} className="rounded-3xl border border-border bg-card p-5 shadow-sm">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">
+                      {professionalName}
                     </p>
-                    <p className="mt-3 whitespace-pre-line text-sm leading-6 text-foreground">
-                      {content.legenda}
-                    </p>
+                    <h3 className="mt-2 font-heading text-2xl font-semibold">{typeLabel}</h3>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                    <span className="rounded-full border border-border px-3 py-1">
-                      {typeLabel}
-                    </span>
-                    <span className="rounded-full border border-border px-3 py-1">
-                      {content.is_premium ? "Premium" : "Padrão"}
-                    </span>
-                    <span className="rounded-full border border-border px-3 py-1">
-                      {content.imagem_url ? "Imagem vinculada" : "Sem imagem"}
-                    </span>
+                  <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold">
+                    {content.ativo ? "Ativa" : "Inativa"}
+                  </span>
+                </div>
+
+                <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,220px)_minmax(0,1fr)]">
+                  <div className="overflow-hidden rounded-2xl border border-border bg-muted">
+                    {content.imagem_url ? (
+                      <div className="relative aspect-[4/5] w-full">
+                        <Image
+                          src={content.imagem_url}
+                          alt={`Conteúdo de ${professionalName}`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 220px"
+                          className="object-cover object-center"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex aspect-[4/5] items-center justify-center px-6 text-center text-sm text-muted-foreground">
+                        Conteúdo sem imagem
+                      </div>
+                    )}
                   </div>
 
-                  <div className="flex flex-col gap-3 sm:flex-row">
-                    <button
-                      type="button"
-                      onClick={() => duplicatePost(content)}
-                      className="h-11 rounded-xl border border-border px-4 text-sm font-bold transition hover:bg-muted"
-                    >
-                      Duplicar para novo
-                    </button>
+                  <div className="space-y-4 min-w-0">
+                    <div className="rounded-2xl border border-border bg-background p-4">
+                      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+                        Legenda
+                      </p>
+                      <p className="mt-3 whitespace-pre-line text-sm leading-6 text-foreground">
+                        {content.legenda}
+                      </p>
+                    </div>
 
-                    <button
-                      type="button"
-                      onClick={() => void handleDeactivate(content.id)}
-                      disabled={loadingId === content.id || !content.ativo}
-                      className="h-11 rounded-xl border border-border px-4 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-70"
-                    >
-                      {content.ativo ? "Desativar" : "Já desativada"}
-                    </button>
+                    <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                      <span className="rounded-full border border-border px-3 py-1">
+                        {typeLabel}
+                      </span>
+                      <span className="rounded-full border border-border px-3 py-1">
+                        {content.is_premium ? "Premium" : "Padrão"}
+                      </span>
+                      <span className="rounded-full border border-border px-3 py-1">
+                        {content.imagem_url ? "Imagem vinculada" : "Sem imagem"}
+                      </span>
+                    </div>
 
-                    <button
-                      type="button"
-                      onClick={() => void handleDelete(content.id)}
-                      disabled={loadingId === content.id}
-                      className="h-11 rounded-xl border border-destructive/30 px-4 text-sm font-bold text-destructive disabled:cursor-not-allowed disabled:opacity-70"
-                    >
-                      Excluir
-                    </button>
+                    <div className="flex flex-col gap-3 sm:flex-row">
+                      <button
+                        type="button"
+                        onClick={() => duplicatePost(content)}
+                        className="h-11 rounded-xl border border-border px-4 text-sm font-bold transition hover:bg-muted"
+                      >
+                        Duplicar para novo
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => void handleDeactivate(content.id)}
+                        disabled={loadingId === content.id || !content.ativo}
+                        className="h-11 rounded-xl border border-border px-4 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-70"
+                      >
+                        {content.ativo ? "Desativar" : "Já desativada"}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => void handleDelete(content.id)}
+                        disabled={loadingId === content.id}
+                        className="h-11 rounded-xl border border-destructive/30 px-4 text-sm font-bold text-destructive disabled:cursor-not-allowed disabled:opacity-70"
+                      >
+                        Excluir
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </article>
-          );
-        })}
+              </article>
+            );
+          })
+        ) : (
+          <div className="rounded-3xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
+            Nenhuma postagem encontrada com este filtro.
+          </div>
+        )}
       </section>
     </div>
   );
