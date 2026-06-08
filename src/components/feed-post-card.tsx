@@ -133,16 +133,18 @@ export function FeedPostCard({
           </div>
         </div>
 
-        <div className="aspect-square w-full bg-muted">
-          {post.content.imagem_url ? (
-            <Image
-              src={post.content.imagem_url}
-              alt={`Conteúdo de ${professional?.nome ?? "profissional"}`}
-              width={800}
-              height={800}
-              className="h-full w-full object-cover"
-            />
-          ) : null}
+        <div className="px-3 pb-3">
+          <div className="aspect-[4/5] w-full overflow-hidden rounded-3xl bg-muted sm:aspect-square">
+            {post.content.imagem_url ? (
+              <Image
+                src={post.content.imagem_url}
+                alt={`Conteúdo de ${professional?.nome ?? "profissional"}`}
+                width={800}
+                height={800}
+                className="h-full w-full object-cover object-center"
+              />
+            ) : null}
+          </div>
         </div>
 
         <div className="p-4">
