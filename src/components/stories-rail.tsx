@@ -31,7 +31,7 @@ export function StoriesRail({ stories, professionals }: StoriesRailProps) {
   const storyItems = stories.length > 0 ? stories : getFallbackStories(professionals);
 
   return (
-    <div className="flex gap-3 overflow-x-auto pb-1">
+    <div className="flex gap-3 overflow-x-auto pb-1 snap-x snap-mandatory">
       {storyItems.map((story) => {
         const professional = getProfessionalForStory(story, professionals);
         const href =

@@ -62,9 +62,22 @@ export default async function FeedPage() {
           </p>
         </div>
 
-        <div className="mb-6">
+        <section className="mb-6 rounded-3xl border border-border bg-card p-4 shadow-sm">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                Stories
+              </p>
+              <h2 className="mt-1 text-sm font-semibold">Atualizações recentes</h2>
+            </div>
+
+            <span className="rounded-full bg-muted px-3 py-1 text-[11px] font-medium text-muted-foreground">
+              Ao vivo
+            </span>
+          </div>
+
           <StoriesRail professionals={professionals} stories={stories} />
-        </div>
+        </section>
 
         <div className="space-y-5">
           {posts.length > 0 ? (
