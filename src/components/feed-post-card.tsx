@@ -182,12 +182,12 @@ export function FeedPostCard({
 
       {commentsModalMounted ? (
         <div
-          className={`fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-3 backdrop-blur-sm transition-opacity duration-200 sm:items-center ${commentsModalActive ? "opacity-100" : "opacity-0"}`}
+          className={`fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-3 backdrop-blur-sm transition-opacity duration-300 ease-out sm:items-center ${commentsModalActive ? "opacity-100" : "opacity-0"}`}
           role="presentation"
           onClick={closeComments}
         >
           <div
-            className={`flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-2xl transition-all duration-200 ease-out ${commentsModalActive ? "translate-y-0 scale-100 opacity-100" : "translate-y-2 scale-95 opacity-0"}`}
+            className={`flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-2xl transition-all duration-300 ease-out ${commentsModalActive ? "translate-y-0 scale-100 opacity-100" : "translate-y-3 scale-95 opacity-0"}`}
             role="dialog"
             aria-modal="true"
             aria-label="Comentários da postagem"
@@ -219,18 +219,18 @@ export function FeedPostCard({
               </div>
             </div>
 
-            <div className="border-b border-border px-4 py-4">
+            <div className="border-b border-border bg-gradient-to-b from-background to-background/95 px-4 py-4">
               <div className="flex items-center gap-3">
                 <Link
                   href={professional?.base44_id ? `/profissionais/${professional.base44_id}` : "/feed"}
-                  className="h-10 w-10 overflow-hidden rounded-full border border-border bg-muted"
+                  className="h-14 w-14 overflow-hidden rounded-full border-2 border-primary/20 bg-muted shadow-sm"
                 >
                   {professional?.foto_perfil_url ? (
                     <Image
                       src={professional.foto_perfil_url}
                       alt={professional.nome}
-                      width={40}
-                      height={40}
+                      width={56}
+                      height={56}
                       className="h-full w-full object-cover"
                     />
                   ) : null}
@@ -247,6 +247,12 @@ export function FeedPostCard({
                     {professional?.especialidades ?? "Profissional cadastrado"}
                   </p>
                 </div>
+              </div>
+
+              <div className="mt-3 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+                <span className="h-px flex-1 bg-border/70" />
+                <span>Legenda</span>
+                <span className="h-px flex-1 bg-border/70" />
               </div>
 
               <p className="mt-3 line-clamp-2 whitespace-pre-line text-sm leading-6 text-muted-foreground">
