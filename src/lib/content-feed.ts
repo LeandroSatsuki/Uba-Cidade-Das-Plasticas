@@ -34,8 +34,13 @@ type ProfessionalPageData = {
 
 type AdminPostagensData = {
   viewer: ViewerProfile;
-  professionals: Professional[]; 
+  professionals: Professional[];
   contents: Content[];
+};
+
+type AdminProfessionalsData = {
+  viewer: ViewerProfile;
+  professionals: Professional[];
 };
 
 type ProfilePageData = {
@@ -232,6 +237,15 @@ export async function loadAdminPostagensData(): Promise<AdminPostagensData> {
     viewer: graph.viewer,
     professionals: graph.professionals,
     contents: graph.contents,
+  };
+}
+
+export async function loadAdminProfessionalsData(): Promise<AdminProfessionalsData> {
+  const graph = await getFeedGraphData();
+
+  return {
+    viewer: graph.viewer,
+    professionals: graph.professionals,
   };
 }
 
