@@ -83,7 +83,7 @@ export function LikeButton({
     return (
       <Link
         href={authHref}
-        className="rounded-full border border-border px-4 py-2 text-sm font-medium transition hover:bg-muted"
+        className="flex h-12 w-full items-center justify-center rounded-full border border-border px-4 text-sm font-medium transition hover:bg-muted sm:w-auto"
       >
         ♡ Curtir
       </Link>
@@ -95,7 +95,7 @@ export function LikeButton({
       type="button"
       onClick={() => void toggleLike()}
       disabled={loading}
-      className="rounded-full border border-border px-4 py-2 text-sm font-medium transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
+      className="flex h-12 w-full items-center justify-center rounded-full border border-border px-4 text-sm font-medium transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
     >
       {isLiked ? "♥" : "♡"} Curtir · {likeCount}
     </button>

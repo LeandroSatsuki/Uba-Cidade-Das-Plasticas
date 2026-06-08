@@ -148,7 +148,7 @@ export function FeedPostCard({
         <div className="p-4">
           <p className="whitespace-pre-line text-sm leading-6">{post.content.legenda}</p>
 
-          <div className="mt-4 flex flex-wrap items-center gap-3">
+          <div className="mt-4 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:items-center">
             <LikeButton
               contentId={post.content.id}
               initialLikeCount={post.likeCount}
@@ -160,7 +160,7 @@ export function FeedPostCard({
             <button
               type="button"
               onClick={openComments}
-              className="rounded-full border border-border px-4 py-2 text-sm font-medium transition hover:bg-muted"
+              className="flex h-12 w-full items-center justify-center rounded-full border border-border px-4 text-sm font-medium transition hover:bg-muted sm:w-auto"
             >
               💬 Comentar · {commentsCountLabel}
             </button>
@@ -170,7 +170,7 @@ export function FeedPostCard({
                 href={`https://wa.me/${whatsapp}?text=${whatsappMessage}`}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+                className="flex h-12 w-full items-center justify-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground sm:w-auto"
                 style={{ color: "#fff" }}
               >
                 WhatsApp
