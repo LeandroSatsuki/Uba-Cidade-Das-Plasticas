@@ -123,7 +123,7 @@ export function FeedPostCard({
           <div className="min-w-0 flex-1">
             <Link
               href={professional?.base44_id ? `/profissionais/${professional.base44_id}` : "/feed"}
-              className="truncate font-semibold"
+              className="truncate text-[15px] font-semibold leading-5"
             >
               {professional?.nome ?? "Profissional cadastrado"}
             </Link>
@@ -146,7 +146,7 @@ export function FeedPostCard({
         </div>
 
         <div className="p-4">
-          <p className="whitespace-pre-line text-sm leading-6">{post.content.legenda}</p>
+          <p className="line-clamp-3 whitespace-pre-line text-sm leading-6">{post.content.legenda}</p>
 
           <div className="mt-4 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:items-center">
             <LikeButton
