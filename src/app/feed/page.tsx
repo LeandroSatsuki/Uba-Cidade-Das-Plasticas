@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { BottomNav } from "@/components/bottom-nav";
@@ -61,46 +60,6 @@ export default async function FeedPage() {
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
             Publicações, orientações e conteúdos compartilhados pelos profissionais da plataforma.
           </p>
-        </div>
-
-        <div className="mb-6">
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-heading text-xl font-semibold">Profissionais</h2>
-            <span className="text-xs text-muted-foreground">
-              {professionals.length} cadastrados
-            </span>
-          </div>
-
-          <div className="flex gap-3 overflow-x-auto pb-2">
-            {professionals.map((professional) => {
-              const href = professional.base44_id
-                ? `/profissionais/${professional.base44_id}`
-                : "/feed";
-
-              return (
-                <Link
-                  key={professional.id}
-                  href={href}
-                  className="flex min-w-[92px] flex-col items-center gap-2"
-                >
-                  <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-border bg-muted">
-                    {professional.foto_perfil_url ? (
-                      <Image
-                        src={professional.foto_perfil_url}
-                        alt={professional.nome}
-                        width={64}
-                        height={64}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : null}
-                  </div>
-                  <span className="line-clamp-2 text-center text-xs font-medium leading-tight">
-                    {professional.nome}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
         </div>
 
         <div className="mb-6">
