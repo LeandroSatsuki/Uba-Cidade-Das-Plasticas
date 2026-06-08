@@ -9,12 +9,14 @@ type CommentFormProps = {
   contentId: string;
   isAuthenticated: boolean;
   currentPath?: string;
+  compact?: boolean;
 };
 
 export function CommentForm({
   contentId,
   isAuthenticated,
   currentPath = "/feed",
+  compact = false,
 }: CommentFormProps) {
   const router = useRouter();
   const [body, setBody] = useState("");
@@ -61,7 +63,7 @@ export function CommentForm({
     return (
       <Link
         href={`/entrar?next=${encodeURIComponent(currentPath)}`}
-        className="mt-4 flex h-12 items-center justify-center rounded-xl border border-dashed border-border px-4 text-sm font-medium text-muted-foreground transition hover:bg-muted"
+        className={`${compact ? "mt-0" : "mt-4"} flex h-12 items-center justify-center rounded-xl border border-dashed border-border px-4 text-sm font-medium text-muted-foreground transition hover:bg-muted`}
       >
         Entrar para comentar
       </Link>
@@ -69,23 +71,44 @@ export function CommentForm({
   }
 
   return (
-    <div className="mt-4 space-y-3">
+    <div className={`${compact ? "mt-0 space-y-2 rounded-2xl border border-border bg-muted/30 p-3" : "mt-4 space-y-3"}`}>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+          Seu comentário
+        </p>
+        <p className="text-[11px] text-muted-foreground">
+          {compact ? "Mais rápido no modal" : "Seja gentil e objetivo"}
+        </p>
+      </div>
+
       <textarea
         value={body}
         onChange={(event) => setBody(event.target.value)}
-        rows={3}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && event.ctrlKey) {
+            event.preventDefault();
+            void submitComment();
+          }
+        }}
+        rows={compact ? 2 : 3}
         placeholder="Escreva um comentário..."
-        className="w-full rounded-xl border border-input bg-transparent px-4 py-3 text-sm shadow-sm outline-none transition focus:border-ring"
+        className="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm shadow-sm outline-none transition focus:border-ring"
       />
 
-      <button
-        type="button"
-        onClick={() => void submitComment()}
-        disabled={loading || !body.trim()}
-        className="h-11 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {loading ? "Enviando..." : "Comentar"}
-      </button>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs text-muted-foreground">
+          Dica: use Ctrl + Enter para enviar depois de escrever.
+        </p>
+
+        <button
+          type="button"
+          onClick={() => void submitComment()}
+          disabled={loading || !body.trim()}
+          className="h-11 rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? "Enviando..." : "Comentar"}
+        </button>
+      </div>
     </div>
   );
 }

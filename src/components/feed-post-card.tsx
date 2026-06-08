@@ -275,6 +275,7 @@ export function FeedPostCard({
                 contentId={post.content.id}
                 isAuthenticated={Boolean(viewerAuthUserId)}
                 currentPath={currentPath}
+                compact
               />
             </div>
           </div>
