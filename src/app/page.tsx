@@ -46,7 +46,7 @@ export default function HomePage() {
           <div className="mt-9 space-y-3">
             <Link
               href="/login"
-              className="flex h-12 w-full items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-white shadow-sm transition hover:opacity-90"
+              className="flex h-12 w-full items-center justify-center rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90"
             >
               Criar conta grátis
             </Link>
