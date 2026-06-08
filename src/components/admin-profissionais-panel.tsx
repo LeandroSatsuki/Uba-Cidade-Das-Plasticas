@@ -393,7 +393,75 @@ export function AdminProfessionalsPanel({ professionals }: AdminProfessionalsPan
           </div>
 
           <div className="min-w-0 space-y-4">
-            <div className="rounded-2xl border border-border bg-background p-4">
+            <details className="rounded-2xl border border-border bg-background p-4 lg:hidden">
+              <summary className="cursor-pointer list-none text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+                Prévia da publicação
+              </summary>
+
+              <div className="mt-4 overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
+                <div className="flex items-center gap-3 p-4">
+                  <div className="relative h-14 w-14 overflow-hidden rounded-full border border-border bg-muted">
+                    {selectedProfessional?.foto_perfil_url ? (
+                      <Image
+                        src={selectedProfessional.foto_perfil_url}
+                        alt={selectedProfessional.nome}
+                        fill
+                        sizes="56px"
+                        className="object-cover object-center"
+                      />
+                    ) : null}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold">
+                      {form.nome.trim() || "Profissional cadastrado"}
+                    </p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {form.especialidades.trim() || "Especialidades aqui"}
+                    </p>
+                  </div>
+
+                  <span className="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">
+                    {form.ativo ? "Ativo" : "Inativo"}
+                  </span>
+                </div>
+
+                <div className="aspect-[4/5] w-full bg-muted">
+                  {form.foto_perfil_url.trim() ? (
+                    <div className="relative h-full min-h-[280px] w-full">
+                      <Image
+                        src={form.foto_perfil_url.trim()}
+                        alt="Prévia da foto do profissional"
+                        fill
+                        sizes="100vw"
+                        className="object-cover object-center"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex h-full min-h-[280px] items-center justify-center px-6 text-center text-sm text-muted-foreground">
+                      A foto do profissional aparece aqui.
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-3 p-4">
+                  <p className="line-clamp-3 whitespace-pre-line text-sm leading-6 text-foreground">
+                    {form.descricao_curta.trim() || "Uma descrição curta vai aparecer aqui."}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                    <span className="rounded-full border border-border px-3 py-1">
+                      {form.base44_id.trim() || "base44_id pendente"}
+                    </span>
+                    <span className="rounded-full border border-border px-3 py-1">
+                      {form.whatsapp.trim() ? "WhatsApp preenchido" : "WhatsApp vazio"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <div className="hidden rounded-2xl border border-border bg-background p-4 lg:block">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                 Prévia
               </p>
