@@ -155,7 +155,7 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden">
       <section className="rounded-3xl border border-border bg-card p-5 shadow-sm">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div>
@@ -171,7 +171,7 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
         </div>
 
         <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-          <div className="space-y-4">
+          <div className="min-w-0 space-y-4">
             <div className="rounded-2xl border border-border bg-background p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                 1. Quem está postando?
@@ -294,7 +294,7 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-4 min-w-0">
             <div className="rounded-2xl border border-border bg-background p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                 Prévia
