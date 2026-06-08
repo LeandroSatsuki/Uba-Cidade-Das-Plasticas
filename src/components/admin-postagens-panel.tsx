@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -11,32 +11,9 @@ type AdminPostagensPanelProps = {
   contents: Content[];
 };
 
-type ContentDraft = {
-  id: string;
-  professional_id: string;
-  content_type: "feed" | "story";
-  imagem_url: string;
-  legenda: string;
-  is_premium: boolean;
-  ativo: boolean;
-};
-
-function getInitialDrafts(contents: Content[]) {
-  return contents.map<ContentDraft>((content) => ({
-    id: content.id,
-    professional_id: content.professional_id ?? "",
-    content_type: content.content_type ?? "feed",
-    imagem_url: content.imagem_url ?? "",
-    legenda: content.legenda,
-    is_premium: content.is_premium,
-    ativo: content.ativo,
-  }));
-}
-
 export function AdminPostagensPanel({ professionals, contents }: AdminPostagensPanelProps) {
   const router = useRouter();
-  const supabase = useMemo(() => createClient(), []);
-  const [drafts, setDrafts] = useState<ContentDraft[]>(() => getInitialDrafts(contents));
+  const supabase = createClient();
   const [newPost, setNewPost] = useState({
     professional_id: professionals[0]?.id ?? "",
     content_type: "feed" as "feed" | "story",
@@ -50,6 +27,17 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
     professionals.find((professional) => professional.id === newPost.professional_id) ??
     professionals[0] ??
     null;
+
+  function duplicatePost(content: Content) {
+    setNewPost({
+      professional_id: content.professional_id ?? professionals[0]?.id ?? "",
+      content_type: content.content_type ?? "feed",
+      imagem_url: content.imagem_url ?? "",
+      legenda: content.legenda ?? "",
+      is_premium: content.is_premium,
+      ativo: true,
+    });
+  }
 
   async function getViewerId() {
     const {
@@ -90,32 +78,6 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
         is_premium: false,
         ativo: true,
       });
-      router.refresh();
-    } finally {
-      setLoadingId(null);
-    }
-  }
-
-  async function handleSave(draft: ContentDraft) {
-    setLoadingId(draft.id);
-
-    try {
-      const { error } = await supabase
-        .from("contents")
-        .update({
-          professional_id: draft.professional_id || null,
-          content_type: draft.content_type,
-          imagem_url: draft.imagem_url.trim(),
-          legenda: draft.legenda.trim(),
-          is_premium: draft.is_premium,
-          ativo: draft.ativo,
-        })
-        .eq("id", draft.id);
-
-      if (error) {
-        throw error;
-      }
-
       router.refresh();
     } finally {
       setLoadingId(null);
@@ -408,164 +370,95 @@ export function AdminPostagensPanel({ professionals, contents }: AdminPostagensP
 
 
       <section className="space-y-4">
-        {drafts.map((draft) => {
+        {contents.map((content) => {
           const professionalName =
-            professionals.find((professional) => professional.id === draft.professional_id)?.nome ??
+            professionals.find((professional) => professional.id === content.professional_id)?.nome ??
             "Profissional";
+          const typeLabel = content.content_type === "story" ? "Story" : "Feed";
 
           return (
-            <article key={draft.id} className="rounded-3xl border border-border bg-card p-5 shadow-sm">
+            <article key={content.id} className="rounded-3xl border border-border bg-card p-5 shadow-sm">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">
                     {professionalName}
                   </p>
-                  <h3 className="mt-2 font-heading text-2xl font-semibold">Editar postagem</h3>
+                  <h3 className="mt-2 font-heading text-2xl font-semibold">{typeLabel}</h3>
                 </div>
 
                 <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold">
-                  {draft.ativo ? "Ativa" : "Inativa"}
+                  {content.ativo ? "Ativa" : "Inativa"}
                 </span>
               </div>
 
-              <div className="mt-4 grid gap-4">
-                <label className="grid gap-2 text-sm">
-                  <span className="font-semibold">Profissional</span>
-                  <select
-                    value={draft.professional_id}
-                    onChange={(event) =>
-                      setDrafts((current) =>
-                        current.map((item) =>
-                          item.id === draft.id ? { ...item, professional_id: event.target.value } : item,
-                        ),
-                      )
-                    }
-                    className="h-12 rounded-xl border border-input bg-transparent px-4 outline-none"
-                  >
-                    {professionals.map((professional) => (
-                      <option key={professional.id} value={professional.id}>
-                        {professional.nome}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="grid gap-2 text-sm">
-                  <span className="font-semibold">Tipo</span>
-                  <select
-                    value={draft.content_type}
-                    onChange={(event) =>
-                      setDrafts((current) =>
-                        current.map((item) =>
-                          item.id === draft.id
-                            ? {
-                                ...item,
-                                content_type:
-                                  event.target.value === "story" ? "story" : "feed",
-                              }
-                            : item,
-                        ),
-                      )
-                    }
-                    className="h-12 rounded-xl border border-input bg-transparent px-4 outline-none"
-                  >
-                    <option value="feed">Feed</option>
-                    <option value="story">Stories</option>
-                  </select>
-                </label>
-
-                <label className="grid gap-2 text-sm">
-                  <span className="font-semibold">Imagem URL</span>
-                  <input
-                    value={draft.imagem_url}
-                    onChange={(event) =>
-                      setDrafts((current) =>
-                        current.map((item) =>
-                          item.id === draft.id ? { ...item, imagem_url: event.target.value } : item,
-                        ),
-                      )
-                    }
-                    className="h-12 rounded-xl border border-input bg-transparent px-4 outline-none"
-                  />
-                </label>
-
-                <label className="grid gap-2 text-sm">
-                  <span className="font-semibold">Legenda</span>
-                  <textarea
-                    value={draft.legenda}
-                    onChange={(event) =>
-                      setDrafts((current) =>
-                        current.map((item) =>
-                          item.id === draft.id ? { ...item, legenda: event.target.value } : item,
-                        ),
-                      )
-                    }
-                    rows={5}
-                    className="rounded-xl border border-input bg-transparent px-4 py-3 outline-none"
-                  />
-                </label>
-
-                <div className="flex flex-wrap gap-4">
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={draft.is_premium}
-                      onChange={(event) =>
-                        setDrafts((current) =>
-                          current.map((item) =>
-                            item.id === draft.id
-                              ? { ...item, is_premium: event.target.checked }
-                              : item,
-                          ),
-                        )
-                      }
-                    />
-                    Premium
-                  </label>
-
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={draft.ativo}
-                      onChange={(event) =>
-                        setDrafts((current) =>
-                          current.map((item) =>
-                            item.id === draft.id ? { ...item, ativo: event.target.checked } : item,
-                          ),
-                        )
-                      }
-                    />
-                    Ativo
-                  </label>
+              <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,220px)_minmax(0,1fr)]">
+                <div className="overflow-hidden rounded-2xl border border-border bg-muted">
+                  {content.imagem_url ? (
+                    <div className="relative aspect-[4/5] w-full">
+                      <Image
+                        src={content.imagem_url}
+                        alt={`Conteúdo de ${professionalName}`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 220px"
+                        className="object-cover object-center"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex aspect-[4/5] items-center justify-center px-6 text-center text-sm text-muted-foreground">
+                      Conteúdo sem imagem
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex flex-wrap gap-3">
-                  <button
-                    type="button"
-                    onClick={() => void handleSave(draft)}
-                    disabled={loadingId === draft.id}
-                    className="h-11 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {loadingId === draft.id ? "Salvando..." : "Salvar"}
-                  </button>
+                <div className="space-y-4 min-w-0">
+                  <div className="rounded-2xl border border-border bg-background p-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+                      Legenda
+                    </p>
+                    <p className="mt-3 whitespace-pre-line text-sm leading-6 text-foreground">
+                      {content.legenda}
+                    </p>
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => void handleDeactivate(draft.id)}
-                    disabled={loadingId === draft.id}
-                    className="h-11 rounded-xl border border-border px-4 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    Desativar
-                  </button>
+                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                    <span className="rounded-full border border-border px-3 py-1">
+                      {typeLabel}
+                    </span>
+                    <span className="rounded-full border border-border px-3 py-1">
+                      {content.is_premium ? "Premium" : "Padrão"}
+                    </span>
+                    <span className="rounded-full border border-border px-3 py-1">
+                      {content.imagem_url ? "Imagem vinculada" : "Sem imagem"}
+                    </span>
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => void handleDelete(draft.id)}
-                    disabled={loadingId === draft.id}
-                    className="h-11 rounded-xl border border-destructive/30 px-4 text-sm font-bold text-destructive disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    Excluir
-                  </button>
+                  <div className="flex flex-col gap-3 sm:flex-row">
+                    <button
+                      type="button"
+                      onClick={() => duplicatePost(content)}
+                      className="h-11 rounded-xl border border-border px-4 text-sm font-bold transition hover:bg-muted"
+                    >
+                      Duplicar para novo
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => void handleDeactivate(content.id)}
+                      disabled={loadingId === content.id || !content.ativo}
+                      className="h-11 rounded-xl border border-border px-4 text-sm font-bold disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      {content.ativo ? "Desativar" : "Já desativada"}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => void handleDelete(content.id)}
+                      disabled={loadingId === content.id}
+                      className="h-11 rounded-xl border border-destructive/30 px-4 text-sm font-bold text-destructive disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      Excluir
+                    </button>
+                  </div>
                 </div>
               </div>
             </article>
