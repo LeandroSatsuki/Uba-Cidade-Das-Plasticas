@@ -129,7 +129,7 @@ export function FeedPostCard({
 
       {commentsOpen ? (
         <div
-          className="fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-3 sm:items-center"
+          className="fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-3 backdrop-blur-sm sm:items-center"
           role="presentation"
           onClick={() => setCommentsOpen(false)}
         >
@@ -157,7 +157,42 @@ export function FeedPostCard({
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-4 py-4">
+            <div className="border-b border-border px-4 py-4">
+              <div className="flex items-center gap-3">
+                <Link
+                  href={professional?.base44_id ? `/profissionais/${professional.base44_id}` : "/feed"}
+                  className="h-10 w-10 overflow-hidden rounded-full border border-border bg-muted"
+                >
+                  {professional?.foto_perfil_url ? (
+                    <Image
+                      src={professional.foto_perfil_url}
+                      alt={professional.nome}
+                      width={40}
+                      height={40}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : null}
+                </Link>
+
+                <div className="min-w-0 flex-1">
+                  <Link
+                    href={professional?.base44_id ? `/profissionais/${professional.base44_id}` : "/feed"}
+                    className="truncate text-sm font-semibold"
+                  >
+                    {professional?.nome ?? "Profissional cadastrado"}
+                  </Link>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {professional?.especialidades ?? "Profissional cadastrado"}
+                  </p>
+                </div>
+              </div>
+
+              <p className="mt-3 line-clamp-2 whitespace-pre-line text-sm leading-6 text-muted-foreground">
+                {post.content.legenda}
+              </p>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-4 py-4 overscroll-contain">
               <CommentsList
                 contentId={post.content.id}
                 comments={post.comments}
@@ -165,14 +200,14 @@ export function FeedPostCard({
                 viewerIsAdmin={viewer?.role === "admin"}
                 collapsedLimit={10}
               />
+            </div>
 
-              <div className="mt-5 border-t border-border pt-4">
-                <CommentForm
-                  contentId={post.content.id}
-                  isAuthenticated={Boolean(viewerAuthUserId)}
-                  currentPath={currentPath}
-                />
-              </div>
+            <div className="border-t border-border bg-background/95 px-4 py-4 backdrop-blur">
+              <CommentForm
+                contentId={post.content.id}
+                isAuthenticated={Boolean(viewerAuthUserId)}
+                currentPath={currentPath}
+              />
             </div>
           </div>
         </div>
