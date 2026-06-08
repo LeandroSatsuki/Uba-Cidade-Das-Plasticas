@@ -51,6 +51,17 @@ export function FeedPostCard({
     return count === 1 ? "1 comentário" : `${count} comentários`;
   }, [post.comments.length]);
 
+  const relevantCommentsCount = useMemo(
+    () => post.comments.filter((comment) => comment.author?.role === "admin").length,
+    [post.comments],
+  );
+
+  const relevantCommentsLabel = useMemo(() => {
+    return relevantCommentsCount === 1
+      ? "1 relevante"
+      : `${relevantCommentsCount} relevantes`;
+  }, [relevantCommentsCount]);
+
   function openComments() {
     if (closeTimerRef.current !== null) {
       window.clearTimeout(closeTimerRef.current);
@@ -182,7 +193,7 @@ export function FeedPostCard({
             aria-label="Comentários da postagem"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-border px-4 py-3">
+            <div className="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
                   Comentários
@@ -190,14 +201,22 @@ export function FeedPostCard({
                 <h3 className="mt-1 text-sm font-semibold">{commentsCountLabel}</h3>
               </div>
 
-              <button
-                type="button"
-                onClick={closeComments}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-lg leading-none transition hover:bg-muted"
-                aria-label="Fechar comentários"
-              >
-                ×
-              </button>
+              <div className="flex items-center gap-2">
+                {relevantCommentsCount > 0 ? (
+                  <span className="rounded-full bg-primary/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-primary">
+                    {relevantCommentsLabel}
+                  </span>
+                ) : null}
+
+                <button
+                  type="button"
+                  onClick={closeComments}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-lg leading-none transition hover:bg-muted"
+                  aria-label="Fechar comentários"
+                >
+                  ×
+                </button>
+              </div>
             </div>
 
             <div className="border-b border-border px-4 py-4">

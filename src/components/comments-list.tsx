@@ -92,7 +92,10 @@ export function CommentsList({
         const canDelete = viewerIsAdmin || (viewerId !== null && comment.user_id === viewerId);
 
         return (
-          <article key={comment.id} className="rounded-2xl border border-border bg-background p-3">
+          <article
+            key={comment.id}
+            className={`rounded-2xl border p-3 ${comment.author?.role === "admin" ? "border-primary/20 bg-primary/5 shadow-sm" : "border-border bg-background"}`}
+          >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
