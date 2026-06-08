@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { ContentCommentWithAuthor } from "@/types/content";
@@ -10,6 +10,7 @@ type CommentsListProps = {
   comments: ContentCommentWithAuthor[];
   viewerId: string | null;
   viewerIsAdmin: boolean;
+  collapsedLimit?: number;
 };
 
 function formatDate(value: string) {
@@ -21,9 +22,34 @@ function formatDate(value: string) {
   });
 }
 
-export function CommentsList({ contentId, comments, viewerId, viewerIsAdmin }: CommentsListProps) {
+function getCommentPriority(comment: ContentCommentWithAuthor) {
+  return comment.author?.role === "admin" ? 0 : 1;
+}
+
+export function CommentsList({
+  contentId,
+  comments,
+  viewerId,
+  viewerIsAdmin,
+  collapsedLimit = 10,
+}: CommentsListProps) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
+
+  const orderedComments = useMemo(
+    () =>
+      [...comments].sort(
+        (left, right) =>
+          getCommentPriority(left) - getCommentPriority(right) ||
+          new Date(right.created_at).getTime() - new Date(left.created_at).getTime(),
+      ),
+    [comments],
+  );
+
+  const visibleComments = showAll
+    ? orderedComments
+    : orderedComments.slice(0, collapsedLimit);
 
   async function removeComment(commentId: string) {
     setDeletingId(commentId);
@@ -60,13 +86,10 @@ export function CommentsList({ contentId, comments, viewerId, viewerIsAdmin }: C
 
   return (
     <div className="space-y-3">
-      {comments.map((comment) => {
+      {visibleComments.map((comment) => {
         const commentAuthorName =
-          comment.author?.full_name?.trim() ||
-          comment.author?.email ||
-          "Usuário";
-        const canDelete =
-          viewerIsAdmin || (viewerId !== null && comment.user_id === viewerId);
+          comment.author?.full_name?.trim() || comment.author?.email || "Usuário";
+        const canDelete = viewerIsAdmin || (viewerId !== null && comment.user_id === viewerId);
 
         return (
           <article key={comment.id} className="rounded-2xl border border-border bg-background p-3">
@@ -92,6 +115,26 @@ export function CommentsList({ contentId, comments, viewerId, viewerIsAdmin }: C
           </article>
         );
       })}
+
+      {!showAll && comments.length > collapsedLimit ? (
+        <button
+          type="button"
+          onClick={() => setShowAll(true)}
+          className="w-full rounded-2xl border border-dashed border-border px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-muted"
+        >
+          Ver mais comentários
+        </button>
+      ) : null}
+
+      {showAll && comments.length > collapsedLimit ? (
+        <button
+          type="button"
+          onClick={() => setShowAll(false)}
+          className="w-full rounded-2xl border border-dashed border-border px-4 py-3 text-sm font-semibold text-muted-foreground transition hover:bg-muted"
+        >
+          Mostrar apenas os 10 primeiros
+        </button>
+      ) : null}
     </div>
   );
 }
