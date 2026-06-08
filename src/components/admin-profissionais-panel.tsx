@@ -363,30 +363,32 @@ export function AdminProfessionalsPanel({ professionals }: AdminProfessionalsPan
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={() => void handleSave()}
-                disabled={loadingId === "create" || loadingId === editingId}
-                className="h-12 flex-1 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
-                style={{ color: "#fff" }}
-              >
-                {loadingId === (editingId ?? "create")
-                  ? editingId
-                    ? "Salvando..."
-                    : "Cadastrando..."
-                  : editingId
-                    ? "Salvar alterações"
-                    : "Cadastrar profissional"}
-              </button>
+            <div className="sticky bottom-20 z-10 -mx-1 bg-background/95 px-1 pb-1 pt-3 backdrop-blur sm:static sm:z-auto sm:mx-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0">
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={() => void handleSave()}
+                  disabled={loadingId === "create" || loadingId === editingId}
+                  className="h-12 flex-1 rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
+                  style={{ color: "#fff" }}
+                >
+                  {loadingId === (editingId ?? "create")
+                    ? editingId
+                      ? "Salvando..."
+                      : "Cadastrando..."
+                    : editingId
+                      ? "Salvar alterações"
+                      : "Cadastrar profissional"}
+                </button>
 
-              <button
-                type="button"
-                onClick={resetForm}
-                className="h-12 rounded-xl border border-border px-4 text-sm font-semibold transition hover:bg-muted"
-              >
-                Limpar formulário
-              </button>
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="h-12 rounded-xl border border-border px-4 text-sm font-semibold transition hover:bg-muted"
+                >
+                  Limpar formulário
+                </button>
+              </div>
             </div>
           </div>
 
