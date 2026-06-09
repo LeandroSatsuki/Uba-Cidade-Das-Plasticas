@@ -1,6 +1,5 @@
 import { EducationalGuidePage } from "@/components/educational-guide";
 import { HomeLanding } from "@/components/home-landing";
-import { getCurrentViewerProfile } from "@/lib/current-profile";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +12,7 @@ export default async function HomePage() {
     return <HomeLanding />;
   }
 
+  const { getCurrentViewerProfile } = await import("@/lib/current-profile");
   const viewer = await getCurrentViewerProfile();
 
   if (viewer.authUserId) {
