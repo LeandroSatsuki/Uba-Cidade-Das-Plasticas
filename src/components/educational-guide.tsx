@@ -1,17 +1,7 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { BottomNav } from "@/components/bottom-nav";
 
-type EducationalGuidePageProps = {
-  activeTab: "home" | "guide";
-};
-
-type GuideSection = {
-  title: string;
-  open?: boolean;
-  content: ReactNode;
-};
-
-const sections: GuideSection[] = [
+const sections = [
   {
     title: "Introdução",
     open: true,
@@ -222,38 +212,7 @@ const sections: GuideSection[] = [
   },
 ];
 
-function GuideNav({ activeTab }: EducationalGuidePageProps) {
-  const items = [
-    { href: "/", label: "Início", icon: "⌂", active: activeTab === "home" },
-    { href: "/guia", label: "Guia", icon: "▣", active: activeTab === "guide" },
-    { href: "/perfil", label: "Perfil", icon: "◯", active: false },
-  ];
-
-  return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#e7e2d9] bg-[#fbfaf7]/95 backdrop-blur-xl">
-      <div className="mx-auto grid h-16 max-w-[480px] grid-cols-3">
-        {items.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`relative flex flex-col items-center justify-center gap-1 border-r border-[#e7e2d9] text-xs last:border-r-0 ${
-              item.active ? "bg-white text-[#18181d]" : "text-[#7a7a83]"
-            }`}
-            aria-current={item.active ? "page" : undefined}
-          >
-            {item.active ? (
-              <span className="absolute top-2 h-1 w-1 rounded-full bg-[#111]" aria-hidden="true" />
-            ) : null}
-            <span className="text-[1.1rem] leading-none">{item.icon}</span>
-            <span>{item.label}</span>
-          </Link>
-        ))}
-      </div>
-    </nav>
-  );
-}
-
-export function EducationalGuidePage({ activeTab }: EducationalGuidePageProps) {
+export function EducationalGuidePage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-30 border-b border-[#ece7de] bg-[#fbfaf7]/95 backdrop-blur-xl">
@@ -297,15 +256,13 @@ export function EducationalGuidePage({ activeTab }: EducationalGuidePageProps) {
                 </span>
               </summary>
 
-              <div className="px-4 pb-4 pt-0.5">
-                {section.content}
-              </div>
+              <div className="px-4 pb-4 pt-0.5">{section.content}</div>
             </details>
           ))}
         </div>
       </section>
 
-      <GuideNav activeTab={activeTab} />
+      <BottomNav />
     </main>
   );
 }
