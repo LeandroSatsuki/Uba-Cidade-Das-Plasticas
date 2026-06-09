@@ -22,7 +22,7 @@ type EntrarFormProps = {
 
 export function EntrarForm({
   callbackErrorMessage,
-  nextPath = "/feed",
+  nextPath = "/",
 }: EntrarFormProps) {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -59,7 +59,7 @@ export function EntrarForm({
         return;
       }
 
-      router.replace(getSafeNextPath(nextPath, "/feed"));
+      router.replace(getSafeNextPath(nextPath, "/"));
       router.refresh();
     } catch (caughtError) {
       setError(getErrorMessage(caughtError));

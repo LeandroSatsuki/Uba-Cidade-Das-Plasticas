@@ -62,7 +62,7 @@ export default function LoginPage() {
         email: trimmedEmail,
         password,
         options: {
-          emailRedirectTo: `${siteUrl}/auth/callback?next=/feed`,
+          emailRedirectTo: `${siteUrl}/auth/callback?next=/`,
           data: {
             full_name: trimmedName,
           },
@@ -75,7 +75,7 @@ export default function LoginPage() {
       }
 
       if (data.session) {
-        router.replace("/feed");
+        router.replace("/");
         router.refresh();
         return;
       }

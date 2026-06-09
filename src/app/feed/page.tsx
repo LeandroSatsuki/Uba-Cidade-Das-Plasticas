@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function FeedPage() {
   const { viewer, professionals, stories, posts } = await loadFeedPageData();
   if (!viewer.authUserId) {
-    redirect("/entrar?next=/feed");
+    redirect("/entrar?next=/");
   }
 
   const isAdmin = viewer.profile?.role === "admin";

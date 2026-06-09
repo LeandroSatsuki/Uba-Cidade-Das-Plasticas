@@ -18,7 +18,7 @@ function getNextPath(searchParams?: Record<string, string | string[] | undefined
   const next = searchParams?.next;
   const value = Array.isArray(next) ? next[0] : next;
 
-  return getSafeNextPath(value, "/feed");
+  return getSafeNextPath(value, "/");
 }
 
 export default async function EntrarPage({ searchParams }: EntrarPageProps) {
