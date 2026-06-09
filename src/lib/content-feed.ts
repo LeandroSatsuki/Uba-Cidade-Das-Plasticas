@@ -140,8 +140,23 @@ function buildPosts(params: {
 }
 
 async function getFeedGraphData(): Promise<FeedGraphData> {
-  const adminClient = createAdminClient();
   const viewer = await getCurrentViewerProfile();
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    return {
+      viewer,
+      professionals: mapFallbackProfessionals(),
+      contents: mapFallbackContents(),
+      stories: [],
+      likes: [],
+      comments: [],
+      commentAuthors: [],
+    };
+  }
+
+  const adminClient = createAdminClient();
 
   const [{ data: professionals }, { data: contents }, { data: likes }, { data: comments }] =
     await Promise.all([
@@ -251,8 +266,10 @@ export async function loadAdminProfessionalsData(): Promise<AdminProfessionalsDa
 
 export async function loadProfilePageData(): Promise<ProfilePageData> {
   const viewer = await getCurrentViewerProfile();
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!viewer.authUserId) {
+  if (!viewer.authUserId || !supabaseUrl || !serviceRoleKey) {
     return {
       viewer,
       profile: null,

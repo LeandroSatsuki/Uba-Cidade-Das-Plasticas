@@ -27,10 +27,10 @@ export default async function AdminPostagensPage() {
             Administração
           </p>
           <h1 className="font-heading text-3xl font-bold leading-tight">
-            Gerenciar postagens
+            Conteúdos
           </h1>
           <p className="text-sm leading-6 text-muted-foreground">
-            Crie, edite, desative e exclua publicações do feed principal com segurança.
+            Publique, edite e organize o feed com um fluxo visual, limpo e sem sair da tela.
           </p>
         </div>
 

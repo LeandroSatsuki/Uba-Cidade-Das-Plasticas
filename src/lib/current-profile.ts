@@ -13,6 +13,13 @@ const PROFILE_SELECT_COLUMNS =
   "id, email, full_name, phone, city, birth_date, avatar_url, plastic_surgery_interests, role, premium_status, premium_since, premium_until, stripe_customer_id, created_at, updated_at";
 
 export async function getCurrentViewerProfile(): Promise<ViewerProfile> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return { authUserId: null, authEmail: null, authFullName: null, profile: null };
+  }
+
   const serverClient = await createSupabaseServerClient();
   const adminClient = createAdminClient();
 

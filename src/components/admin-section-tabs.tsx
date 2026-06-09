@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const tabs = [
   { href: "/admin", label: "Início" },
-  { href: "/admin/postagens", label: "Postagens" },
+  { href: "/admin/postagens", label: "Conteúdos" },
   { href: "/admin/profissionais", label: "Profissionais" },
 ] as const;
 
