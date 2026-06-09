@@ -1,5 +1,5 @@
-import { EducationalGuidePage } from "@/components/educational-guide";
+import { redirect } from "next/navigation";
 
 export default function GuiaPage() {
-  return <EducationalGuidePage activeTab="guide" />;
+  redirect("/");
 }
