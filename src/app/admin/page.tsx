@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AppShell } from "@/components/app-shell";
+import { AdminSectionTabs } from "@/components/admin-section-tabs";
 import { getCurrentViewerProfile } from "@/lib/current-profile";
 
 export const dynamic = "force-dynamic";
@@ -18,14 +19,18 @@ export default async function AdminPage() {
 
   return (
     <AppShell>
-      <section className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-          Administração
-        </p>
-        <h1 className="font-heading text-3xl font-bold leading-tight">Painel admin</h1>
-        <p className="text-sm leading-6 text-muted-foreground">
-          Escolha o módulo que você quer usar. A ideia aqui é manter tudo simples e direto.
-        </p>
+      <section className="space-y-4">
+        <div className="space-y-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+            Administração
+          </p>
+          <h1 className="font-heading text-3xl font-bold leading-tight">Painel admin</h1>
+          <p className="text-sm leading-6 text-muted-foreground">
+            Escolha o módulo que você quer usar. A ideia aqui é manter tudo simples e direto.
+          </p>
+        </div>
+
+        <AdminSectionTabs currentPath="/admin" />
       </section>
 
       <section className="mt-8 grid gap-4">

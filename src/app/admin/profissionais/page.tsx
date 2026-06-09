@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { BottomNav } from "@/components/bottom-nav";
 import { AppShell } from "@/components/app-shell";
+import { AdminSectionTabs } from "@/components/admin-section-tabs";
 import { AdminProfessionalsPanel } from "@/components/admin-profissionais-panel";
 import { loadAdminProfessionalsData } from "@/lib/content-feed";
 
@@ -19,16 +20,20 @@ export default async function AdminProfissionaisPage() {
 
   return (
     <AppShell>
-      <section className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-          Administração
-        </p>
-        <h1 className="font-heading text-3xl font-bold leading-tight">
-          Profissionais
-        </h1>
-        <p className="text-sm leading-6 text-muted-foreground">
-          Cadastre, edite e organize os perfis que aparecem no feed e nas páginas públicas.
-        </p>
+      <section className="space-y-4">
+        <div className="space-y-3">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+            Administração
+          </p>
+          <h1 className="font-heading text-3xl font-bold leading-tight">
+            Profissionais
+          </h1>
+          <p className="text-sm leading-6 text-muted-foreground">
+            Cadastre, edite e organize os perfis que aparecem no feed e nas páginas públicas.
+          </p>
+        </div>
+
+        <AdminSectionTabs currentPath="/admin/profissionais" />
       </section>
 
       <section className="mt-8">
