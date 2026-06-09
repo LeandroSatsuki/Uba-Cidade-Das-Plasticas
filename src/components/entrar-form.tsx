@@ -2,7 +2,6 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { BottomNav } from "@/components/bottom-nav";
 import { createClient } from "@/lib/supabase/client";
 import { getSafeNextPath } from "@/lib/safe-next";
@@ -24,7 +23,6 @@ export function EntrarForm({
   callbackErrorMessage,
   nextPath = "/",
 }: EntrarFormProps) {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -59,8 +57,7 @@ export function EntrarForm({
         return;
       }
 
-      router.replace(getSafeNextPath(nextPath, "/"));
-      router.refresh();
+      window.location.replace(getSafeNextPath(nextPath, "/"));
     } catch (caughtError) {
       setError(getErrorMessage(caughtError));
     } finally {

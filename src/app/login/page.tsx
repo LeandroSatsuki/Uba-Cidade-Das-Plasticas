@@ -3,7 +3,6 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { BottomNav } from "@/components/bottom-nav";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -16,7 +15,6 @@ function getErrorMessage(error: unknown) {
 }
 
 export default function LoginPage() {
-  const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -75,8 +73,7 @@ export default function LoginPage() {
       }
 
       if (data.session) {
-        router.replace("/");
-        router.refresh();
+        window.location.replace("/");
         return;
       }
 
