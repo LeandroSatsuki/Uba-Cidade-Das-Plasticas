@@ -98,7 +98,6 @@ export default async function FeedPage() {
               <FeedPostCard
                 key={post.content.id}
                 post={post}
-                viewer={viewer.profile}
                 viewerAuthUserId={viewer.authUserId}
                 currentPath="/feed"
               />

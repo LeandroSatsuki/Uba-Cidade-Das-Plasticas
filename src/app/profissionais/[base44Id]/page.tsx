@@ -181,7 +181,6 @@ export default async function ProfessionalPage({ params }: ProfessionalPageProps
                     <FeedPostCard
                       key={post.content.id}
                       post={post}
-                      viewer={viewer.profile}
                       viewerAuthUserId={viewer.authUserId}
                       currentPath={`/profissionais/${base44Id}`}
                     />
