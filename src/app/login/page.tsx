@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { BottomNav } from "@/components/bottom-nav";
+import { AuthSplitLayout } from "@/components/auth-split-layout";
 import { createClient } from "@/lib/supabase/client";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -92,51 +92,38 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-lg items-center justify-between px-6">
-          <Link href="/" className="font-heading text-xl font-bold tracking-tight">
-            Cidade das Plásticas
-          </Link>
-
-          <div className="flex items-center gap-4">
-            <span className="text-xl text-muted-foreground" aria-hidden="true">
-              ♢
-            </span>
-
-            <Link
-              href="/premium"
-              className="inline-flex items-center gap-1 rounded-full bg-accent px-3 py-1.5 text-sm font-medium text-accent-foreground"
-            >
-              <span aria-hidden="true">♛</span>
-              Premium
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      <section className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-lg flex-col px-6 pb-24 pt-9">
-        <div className="mb-9 flex justify-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-border bg-primary text-primary-foreground shadow-sm">
-            <span className="font-heading text-sm font-bold">UBÁ</span>
+    <AuthSplitLayout
+      heroEyebrow="Cadastro gratuito"
+      heroTitle="Crie sua conta e acompanhe tudo em um só lugar."
+      heroDescription="Entre para acessar a plataforma, acompanhar conteúdos premium e receber novidades com uma experiência visual mais limpa."
+      heroImageUrl="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1600&q=80"
+      heroImageAlt="Espaço elegante com iluminação suave e recepção minimalista"
+    >
+      <div className="flex flex-col justify-center">
+        <div className="mb-10 flex justify-center lg:mb-12">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-black/10 bg-white/95 text-sm font-semibold tracking-[0.24em] text-foreground shadow-[0_18px_50px_rgba(0,0,0,0.08)]">
+            UBÁ
           </div>
         </div>
 
         <div className="mx-auto w-full max-w-sm">
-          <div className="mb-8">
-            <h1 className="font-heading text-3xl font-bold leading-tight">
+          <div className="mb-8 text-center lg:text-left">
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground">
+              Comece por aqui
+            </p>
+            <h1 className="mt-3 font-heading text-4xl font-semibold leading-tight text-balance text-foreground sm:text-5xl lg:text-[3.25rem]">
               Criar sua conta
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Gratuito. Sem cartão de crédito.
+            <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-[0.95rem]">
+              Gratuito. Sem cartão de crédito. Faça seu cadastro em poucos passos.
             </p>
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className="space-y-5" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <label
                 htmlFor="name"
-                className="text-xs font-bold uppercase tracking-[0.2em]"
+                className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-foreground/70"
               >
                 Nome completo
               </label>
@@ -147,14 +134,14 @@ export default function LoginPage() {
                 placeholder="Seu nome"
                 value={fullName}
                 onChange={(event) => setFullName(event.target.value)}
-                className="h-12 w-full rounded-xl border border-input bg-transparent px-4 text-sm shadow-sm outline-none transition focus:border-ring"
+                className="h-14 w-full rounded-2xl border border-black/10 bg-white/90 px-4 text-[0.95rem] shadow-[0_10px_30px_rgba(0,0,0,0.05)] outline-none transition placeholder:text-muted-foreground/70 focus:border-black/20 focus:ring-4 focus:ring-black/5"
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="text-xs font-bold uppercase tracking-[0.2em]"
+                className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-foreground/70"
               >
                 E-mail
               </label>
@@ -165,14 +152,14 @@ export default function LoginPage() {
                 placeholder="seu@email.com"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                className="h-12 w-full rounded-xl border border-input bg-transparent px-4 text-sm shadow-sm outline-none transition focus:border-ring"
+                className="h-14 w-full rounded-2xl border border-black/10 bg-white/90 px-4 text-[0.95rem] shadow-[0_10px_30px_rgba(0,0,0,0.05)] outline-none transition placeholder:text-muted-foreground/70 focus:border-black/20 focus:ring-4 focus:ring-black/5"
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="text-xs font-bold uppercase tracking-[0.2em]"
+                className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-foreground/70"
               >
                 Senha
               </label>
@@ -184,9 +171,9 @@ export default function LoginPage() {
                   placeholder="Mínimo 6 caracteres"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  className="h-12 w-full rounded-xl border border-input bg-transparent px-4 pr-11 text-sm shadow-sm outline-none transition focus:border-ring"
+                  className="h-14 w-full rounded-2xl border border-black/10 bg-white/90 px-4 pr-11 text-[0.95rem] shadow-[0_10px_30px_rgba(0,0,0,0.05)] outline-none transition placeholder:text-muted-foreground/70 focus:border-black/20 focus:ring-4 focus:ring-black/5"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                   ◉
                 </span>
               </div>
@@ -195,7 +182,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <label
                 htmlFor="confirmPassword"
-                className="text-xs font-bold uppercase tracking-[0.2em]"
+                className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-foreground/70"
               >
                 Confirmar senha
               </label>
@@ -207,22 +194,22 @@ export default function LoginPage() {
                   placeholder="Repita a senha"
                   value={confirmPassword}
                   onChange={(event) => setConfirmPassword(event.target.value)}
-                  className="h-12 w-full rounded-xl border border-input bg-transparent px-4 pr-11 text-sm shadow-sm outline-none transition focus:border-ring"
+                  className="h-14 w-full rounded-2xl border border-black/10 bg-white/90 px-4 pr-11 text-[0.95rem] shadow-[0_10px_30px_rgba(0,0,0,0.05)] outline-none transition placeholder:text-muted-foreground/70 focus:border-black/20 focus:ring-4 focus:ring-black/5"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
                   ◉
                 </span>
               </div>
             </div>
 
             {error ? (
-              <p className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              <p className="rounded-2xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                 {error}
               </p>
             ) : null}
 
             {success ? (
-              <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700">
+              <p className="rounded-2xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700">
                 {success}
               </p>
             ) : null}
@@ -230,22 +217,20 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="h-12 w-full rounded-xl bg-primary px-4 text-sm font-bold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
+              className="h-14 w-full rounded-2xl bg-[#101010] px-4 text-sm font-semibold text-white shadow-[0_20px_50px_rgba(16,16,16,0.2)] transition hover:translate-y-[-1px] hover:bg-black disabled:cursor-not-allowed disabled:opacity-70"
             >
               {loading ? "Criando conta..." : "Criar conta grátis"}
             </button>
           </form>
 
-          <p className="mt-7 text-center text-sm text-muted-foreground">
+          <p className="mt-7 text-center text-sm text-muted-foreground lg:text-left">
             Já tem uma conta?{" "}
-            <Link href="/entrar" className="font-semibold text-foreground">
+            <Link href="/entrar" className="font-semibold text-foreground underline-offset-4 hover:underline">
               Entrar
             </Link>
           </p>
         </div>
-      </section>
-
-      <BottomNav />
-    </main>
+      </div>
+    </AuthSplitLayout>
   );
 }
