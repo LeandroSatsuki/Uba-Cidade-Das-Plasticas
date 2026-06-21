@@ -216,7 +216,7 @@ export function EducationalGuidePage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-30 border-b border-[#ece7de] bg-[#fbfaf7]/95 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-[480px] items-center justify-between px-4">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 lg:px-6">
           <Link href="/" className="font-heading text-[1.05rem] font-bold tracking-tight text-[#16161a]">
             Cidade das Plásticas
           </Link>
@@ -231,34 +231,64 @@ export function EducationalGuidePage() {
         </div>
       </header>
 
-      <section className="mx-auto max-w-[480px] px-4 pb-24 pt-6">
-        <div className="mb-8">
-          <h1 className="font-heading text-4xl font-bold leading-[1.05] text-[#17171c]">
-            Guia Educativo
-          </h1>
-          <p className="mt-3 max-w-[30rem] text-[1.02rem] leading-7 text-[#767683]">
-            Tudo o que você precisa saber sobre cirurgia plástica, do preparo à
-            recuperação.
-          </p>
-        </div>
+      <section className="mx-auto max-w-6xl px-4 pb-24 pt-6 lg:px-6 lg:pb-12 lg:pt-8">
+        <div className="grid gap-8 lg:grid-cols-[320px_minmax(0,1fr)]">
+          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+            <div className="rounded-3xl border border-[#e1ddd5] bg-white p-6 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8b8b97]">
+                Guia educativo
+              </p>
+              <h1 className="mt-3 font-heading text-4xl font-bold leading-[1.05] text-[#17171c]">
+                Conteúdo claro para decidir com segurança.
+              </h1>
+              <p className="mt-4 text-[1.02rem] leading-7 text-[#767683]">
+                Tudo o que você precisa saber sobre cirurgia plástica, do preparo à
+                recuperação.
+              </p>
 
-        <div className="space-y-3">
-          {sections.map((section) => (
-            <details
-              key={section.title}
-              className="group rounded-2xl border border-[#e1ddd5] bg-white shadow-[0_1px_0_rgba(17,17,17,0.02)]"
-              open={section.open}
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl px-4 py-4 text-[1.02rem] font-semibold text-[#202026] marker:hidden [&::-webkit-details-marker]:hidden">
-                <span>{section.title}</span>
-                <span className="text-[#9a9aa4] transition-transform duration-200 group-open:rotate-180">
-                  ⌄
-                </span>
-              </summary>
+              <div className="mt-6 space-y-3">
+                <div className="rounded-2xl bg-[#fbfaf7] px-4 py-3 text-sm leading-6 text-[#47474f]">
+                  Revisão simples de dúvidas frequentes e orientações práticas.
+                </div>
+                <div className="rounded-2xl bg-[#fbfaf7] px-4 py-3 text-sm leading-6 text-[#47474f]">
+                  Estrutura pensada para leitura rápida no mobile e mais rica no desktop.
+                </div>
+                <div className="rounded-2xl bg-[#fbfaf7] px-4 py-3 text-sm leading-6 text-[#47474f]">
+                  Acesso premium destacado para quem quer navegar com mais profundidade.
+                </div>
+              </div>
+            </div>
 
-              <div className="px-4 pb-4 pt-0.5">{section.content}</div>
-            </details>
-          ))}
+            <div className="rounded-3xl border border-[#e1ddd5] bg-[#f8f4ed] p-6 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#8b8b97]">
+                Destaques rápidos
+              </p>
+              <div className="mt-4 space-y-3 text-sm leading-6 text-[#47474f]">
+                <p>• Certificação e critérios básicos de escolha.</p>
+                <p>• Perguntas essenciais antes da cirurgia.</p>
+                <p>• Preparo, recuperação e pós-operatório.</p>
+              </div>
+            </div>
+          </aside>
+
+          <div className="space-y-3">
+            {sections.map((section) => (
+              <details
+                key={section.title}
+                className="group rounded-2xl border border-[#e1ddd5] bg-white shadow-[0_1px_0_rgba(17,17,17,0.02)]"
+                open={section.open}
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl px-4 py-4 text-[1.02rem] font-semibold text-[#202026] marker:hidden [&::-webkit-details-marker]:hidden">
+                  <span>{section.title}</span>
+                  <span className="text-[#9a9aa4] transition-transform duration-200 group-open:rotate-180">
+                    ⌄
+                  </span>
+                </summary>
+
+                <div className="px-4 pb-4 pt-0.5">{section.content}</div>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 
