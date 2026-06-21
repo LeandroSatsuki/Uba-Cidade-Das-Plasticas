@@ -9,7 +9,7 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-lg items-center justify-between px-4">
+        <div className="mx-auto flex h-14 max-w-lg items-center justify-between px-4 lg:max-w-6xl lg:px-6">
           <Link href="/feed" className="flex items-center gap-2">
             <span className="font-heading text-lg font-bold tracking-tight">
               Cidade das Plásticas
@@ -26,7 +26,7 @@ export function AppShell({ children }: AppShellProps) {
         </div>
       </header>
 
-      <main className="mx-auto min-h-[calc(100vh-3.5rem)] max-w-lg px-4 pb-20 pt-6">
+      <main className="mx-auto min-h-[calc(100vh-3.5rem)] max-w-lg px-4 pb-20 pt-6 lg:max-w-6xl lg:px-6 lg:pb-10">
         {children}
       </main>
     </div>

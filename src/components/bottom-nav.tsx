@@ -45,7 +45,7 @@ export function BottomNav({ className }: BottomNavProps) {
   return (
     <nav
       className={[
-        "fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur-xl",
+        "fixed inset-x-0 bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur-xl lg:hidden",
         className,
       ]
         .filter(Boolean)
@@ -62,7 +62,7 @@ export function BottomNav({ className }: BottomNavProps) {
               aria-current={active ? "page" : undefined}
               className={[
                 "relative flex flex-col items-center justify-center gap-1 transition",
-                active ? "text-foreground font-semibold" : "text-muted-foreground",
+                active ? "font-semibold text-foreground" : "text-muted-foreground",
               ].join(" ")}
             >
               {active ? (
