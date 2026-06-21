@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 
 export default async function FeedPage() {
   const { viewer, professionals, posts } = await loadFeedPageData();
+
   if (!viewer.authUserId) {
     redirect("/entrar?next=/");
   }
@@ -21,7 +22,7 @@ export default async function FeedPage() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-lg items-center justify-between gap-3 px-4">
+        <div className="mx-auto flex h-14 max-w-lg items-center justify-between gap-3 px-4 lg:max-w-6xl lg:px-6">
           <div className="min-w-0">
             <Link href="/feed" className="block font-heading text-lg font-bold tracking-tight">
               Cidade das Plásticas
@@ -52,61 +53,115 @@ export default async function FeedPage() {
         </div>
       </header>
 
-      <section className="mx-auto max-w-lg px-4 pb-24 pt-5">
-        <div className="mb-6 space-y-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-              Dashboard da comunidade
-            </p>
-            <h1 className="mt-2 font-heading text-3xl font-bold leading-tight">
-              Novidades em destaque
-            </h1>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Acompanhe publicações, encontre profissionais e desbloqueie a experiência premium.
-            </p>
+      <section className="mx-auto max-w-6xl px-4 pb-24 pt-5 lg:px-6">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+                  Dashboard da comunidade
+                </p>
+                <h1 className="mt-2 font-heading text-3xl font-bold leading-tight sm:text-4xl">
+                  Novidades em destaque
+                </h1>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
+                  Acompanhe publicações, encontre profissionais e desbloqueie a experiência premium.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div className="rounded-2xl border border-border bg-card p-3 shadow-sm">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                    Conteúdos
+                  </p>
+                  <p className="mt-2 font-heading text-2xl font-bold">{feedCount}</p>
+                </div>
+                <div className="rounded-2xl border border-border bg-card p-3 shadow-sm">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                    Profissionais
+                  </p>
+                  <p className="mt-2 font-heading text-2xl font-bold">{professionalCount}</p>
+                </div>
+                <div className="rounded-2xl border border-border bg-card p-3 shadow-sm">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
+                    Premium
+                  </p>
+                  <p className="mt-2 font-heading text-2xl font-bold">{premiumCount}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:hidden">
+              <PremiumPromoBanner href="/premium" />
+            </div>
+
+            <div className="space-y-5">
+              {posts.length > 0 ? (
+                posts.map((post) => (
+                  <FeedPostCard
+                    key={post.content.id}
+                    post={post}
+                    viewerAuthUserId={viewer.authUserId}
+                    currentPath="/feed"
+                  />
+                ))
+              ) : (
+                <div className="rounded-3xl border border-border bg-card p-6 text-sm leading-6 text-muted-foreground shadow-sm">
+                  Ainda não há publicações ativas.
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-2xl border border-border bg-card p-3 shadow-sm">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                Conteúdos
-              </p>
-              <p className="mt-2 font-heading text-2xl font-bold">{feedCount}</p>
-            </div>
-            <div className="rounded-2xl border border-border bg-card p-3 shadow-sm">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                Profissionais
-              </p>
-              <p className="mt-2 font-heading text-2xl font-bold">{professionalCount}</p>
-            </div>
-            <div className="rounded-2xl border border-border bg-card p-3 shadow-sm">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-                Premium
-              </p>
-              <p className="mt-2 font-heading text-2xl font-bold">{premiumCount}</p>
-            </div>
-          </div>
-        </div>
+          <aside className="hidden space-y-4 lg:sticky lg:top-24 lg:block lg:self-start">
+            <PremiumPromoBanner href="/premium" />
 
-        <div className="mb-6">
-          <PremiumPromoBanner href="/premium" />
-        </div>
-
-        <div className="space-y-5">
-          {posts.length > 0 ? (
-            posts.map((post) => (
-              <FeedPostCard
-                key={post.content.id}
-                post={post}
-                viewerAuthUserId={viewer.authUserId}
-                currentPath="/feed"
-              />
-            ))
-          ) : (
-            <div className="rounded-3xl border border-border bg-card p-6 text-sm leading-6 text-muted-foreground shadow-sm">
-              Ainda não há publicações ativas.
+            <div className="rounded-3xl border border-border bg-card p-5 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+                Resumo rápido
+              </p>
+              <div className="mt-4 space-y-3 text-sm">
+                <div className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-background px-4 py-3">
+                  <span className="text-muted-foreground">Publicações</span>
+                  <span className="font-semibold">{feedCount}</span>
+                </div>
+                <div className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-background px-4 py-3">
+                  <span className="text-muted-foreground">Profissionais</span>
+                  <span className="font-semibold">{professionalCount}</span>
+                </div>
+                <div className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-background px-4 py-3">
+                  <span className="text-muted-foreground">Premium</span>
+                  <span className="font-semibold">{premiumCount}</span>
+                </div>
+              </div>
             </div>
-          )}
+
+            <div className="rounded-3xl border border-border bg-card p-5 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+                Navegação
+              </p>
+              <div className="mt-4 grid gap-2">
+                <Link
+                  href="/feed"
+                  className="rounded-2xl border border-border bg-background px-4 py-3 text-sm font-medium transition hover:bg-muted"
+                >
+                  Feed principal
+                </Link>
+                <Link
+                  href="/premium"
+                  className="rounded-2xl border border-border bg-background px-4 py-3 text-sm font-medium transition hover:bg-muted"
+                >
+                  Contratar premium
+                </Link>
+                <Link
+                  href="/perfil"
+                  className="rounded-2xl border border-border bg-background px-4 py-3 text-sm font-medium transition hover:bg-muted"
+                >
+                  Meu perfil
+                </Link>
+              </div>
+            </div>
+          </aside>
         </div>
       </section>
 
