@@ -41,9 +41,9 @@ export default async function AdminPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                 Conteúdo
               </p>
-              <h2 className="mt-2 text-xl font-semibold">Postagens</h2>
+              <h2 className="mt-2 text-xl font-semibold">Conteúdos</h2>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Criar, editar, desativar e excluir publicações do feed e stories.
+                Criar, editar, desativar e organizar publicações do feed em um fluxo limpo.
               </p>
             </Link>
 
