@@ -1,5 +1,7 @@
-import { redirect } from "next/navigation";
+import { EducationalGuidePage } from "@/components/educational-guide";
+
+export const dynamic = "force-dynamic";
 
 export default function GuiaPage() {
-  redirect("/");
+  return <EducationalGuidePage />;
 }
