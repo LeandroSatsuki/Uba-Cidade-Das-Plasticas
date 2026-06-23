@@ -20,7 +20,7 @@ export default async function FeedPage() {
   const professionalCount = professionals.length;
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-background text-foreground lg:pl-72">
       <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 lg:px-6">
           <div className="min-w-0">

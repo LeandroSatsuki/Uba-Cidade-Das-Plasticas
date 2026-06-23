@@ -214,7 +214,7 @@ const sections = [
 
 export function EducationalGuidePage() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen bg-background text-foreground lg:pl-72">
       <header className="sticky top-0 z-30 border-b border-[#ece7de] bg-[#fbfaf7]/95 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 lg:px-6">
           <Link href="/" className="font-heading text-[1.05rem] font-bold tracking-tight text-[#16161a]">
