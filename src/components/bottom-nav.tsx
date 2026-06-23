@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import type { ViewerProfile } from "@/lib/current-profile";
 
 type BottomNavProps = {
   className?: string;
+  viewer?: ViewerProfile;
 };
 
 function resolveActivePath(pathname: string) {
@@ -91,8 +93,104 @@ function NavItems({ pathname, desktop = false }: { pathname: string; desktop?: b
   );
 }
 
-export function BottomNav({ className }: BottomNavProps) {
+function DesktopAccountCard({ viewer, pathname }: { viewer: ViewerProfile | undefined; pathname: string }) {
+  const router = useRouter();
+  const safeViewer = viewer ?? { authUserId: null, authEmail: null, authFullName: null, profile: null };
+  const fullName =
+    safeViewer.profile?.full_name ?? safeViewer.authFullName ?? safeViewer.authEmail ?? "Minha conta";
+  const avatarUrl = safeViewer.profile?.avatar_url?.trim() ?? "";
+  const initials = (fullName || "CD").slice(0, 2).toUpperCase();
+
+  async function handleLogout() {
+    const { createClient } = await import("@/lib/supabase/client");
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.replace("/entrar?next=" + encodeURIComponent(pathname));
+    router.refresh();
+  }
+
+  if (!safeViewer.authUserId) {
+    return (
+      <div className="rounded-[1.5rem] border border-border bg-card p-4 shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+            CDP
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold leading-5">Entrar na conta</p>
+            <p className="truncate text-xs leading-5 text-muted-foreground">
+              Acesse seu perfil e continue a navegação.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-2">
+          <Link
+            href={`/entrar?next=${encodeURIComponent(pathname)}`}
+            className="inline-flex h-10 items-center justify-center rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+          >
+            Entrar
+          </Link>
+          <Link
+            href="/guia"
+            className="inline-flex h-10 items-center justify-center rounded-xl border border-border bg-background px-4 text-sm font-semibold transition hover:bg-muted"
+          >
+            Ler guia
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-[1.5rem] border border-border bg-card p-4 shadow-sm">
+      <div className="flex items-center gap-3">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-sm font-bold text-primary">
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={avatarUrl} alt={fullName} className="h-full w-full object-cover" />
+          ) : (
+            initials
+          )}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-semibold leading-5">{fullName}</p>
+          <p className="truncate text-xs leading-5 text-muted-foreground">
+            {safeViewer.profile?.premium_status === "active" ? "Assinante Premium" : "Perfil e preferências"}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <Link
+          href="/perfil"
+          className="inline-flex h-10 items-center justify-center rounded-xl bg-background px-4 text-sm font-semibold transition hover:bg-muted"
+        >
+          Perfil
+        </Link>
+        <Link
+          href="/premium"
+          className="inline-flex h-10 items-center justify-center rounded-xl bg-accent px-4 text-sm font-semibold text-accent-foreground transition hover:opacity-90"
+        >
+          Premium
+        </Link>
+      </div>
+
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="mt-2 inline-flex h-10 w-full items-center justify-center rounded-xl border border-border bg-background px-4 text-sm font-semibold transition hover:bg-muted"
+      >
+        Sair
+      </button>
+    </div>
+  );
+}
+
+export function BottomNav({ className, viewer }: BottomNavProps) {
   const pathname = usePathname();
+  const safeViewer = viewer ?? { authUserId: null, authEmail: null, authFullName: null, profile: null };
 
   return (
     <>
@@ -121,34 +219,7 @@ export function BottomNav({ className }: BottomNavProps) {
             <NavItems pathname={pathname} desktop />
           </nav>
 
-          <div className="rounded-[1.5rem] border border-border bg-card p-4 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
-                CDP
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold leading-5">Minha conta</p>
-                <p className="truncate text-xs leading-5 text-muted-foreground">
-                  Acesse perfil, preferências e assinatura.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <Link
-                href="/perfil"
-                className="inline-flex h-10 items-center justify-center rounded-xl bg-background px-4 text-sm font-semibold transition hover:bg-muted"
-              >
-                Perfil
-              </Link>
-              <Link
-                href="/premium"
-                className="inline-flex h-10 items-center justify-center rounded-xl bg-accent px-4 text-sm font-semibold text-accent-foreground transition hover:opacity-90"
-              >
-                Premium
-              </Link>
-            </div>
-          </div>
+          <DesktopAccountCard viewer={safeViewer} pathname={pathname} />
 
           <div className="mt-auto space-y-3 rounded-[1.5rem] border border-border bg-card p-4 shadow-sm">
             <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
