@@ -72,7 +72,7 @@ function NavItems({ pathname, desktop = false }: { pathname: string; desktop?: b
                 : "relative flex flex-col items-center justify-center gap-1 transition",
               active
                 ? desktop
-                  ? "bg-muted font-semibold text-foreground"
+                  ? "bg-muted font-semibold text-foreground ring-1 ring-border"
                   : "font-semibold text-foreground"
                 : desktop
                   ? "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -120,6 +120,35 @@ export function BottomNav({ className }: BottomNavProps) {
           <nav className="space-y-1">
             <NavItems pathname={pathname} desktop />
           </nav>
+
+          <div className="rounded-[1.5rem] border border-border bg-card p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                CDP
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold leading-5">Minha conta</p>
+                <p className="truncate text-xs leading-5 text-muted-foreground">
+                  Acesse perfil, preferências e assinatura.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <Link
+                href="/perfil"
+                className="inline-flex h-10 items-center justify-center rounded-xl bg-background px-4 text-sm font-semibold transition hover:bg-muted"
+              >
+                Perfil
+              </Link>
+              <Link
+                href="/premium"
+                className="inline-flex h-10 items-center justify-center rounded-xl bg-accent px-4 text-sm font-semibold text-accent-foreground transition hover:opacity-90"
+              >
+                Premium
+              </Link>
+            </div>
+          </div>
 
           <div className="mt-auto space-y-3 rounded-[1.5rem] border border-border bg-card p-4 shadow-sm">
             <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
